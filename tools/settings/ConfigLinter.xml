@@ -48,6 +48,8 @@
     <!-- Checks whether files end with a new line.                        -->
     <!-- See https://checkstyle.org/config_misc.html#NewlineAtEndOfFile -->
     <!-- Start Custom -->
+
+
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
         <property name="max" value="100"/>
@@ -107,9 +109,6 @@
             <property name="severity" value="ignore"/>
         </module>
         <module name="JavadocStyle"/>
-        <module name="MissingJavadocMethod">
-            <property name="severity" value="warning"/>
-        </module>
         <!-- Enables @SuppressWarnings Support                -->
         <module name="SuppressWarningsHolder"/>
 
@@ -170,12 +169,8 @@
         <!-- Checks for common coding problems               -->
         <!-- See https://checkstyle.org/config_coding.html -->
         <module name="EmptyStatement"/>
-        <module name="EqualsHashCode"/>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <module name="MagicNumber">
-            <property name="severity" value="warning"/>
-        </module>
         <module name="MissingSwitchDefault"/>
         <module name="MultipleVariableDeclarations"/>
         <module name="SimplifyBooleanExpression"/>
@@ -183,8 +178,6 @@
 
         <!-- Checks for class design                         -->
         <!-- See https://checkstyle.org/config_design.html -->
-        <module name="DesignForExtension"/>
-        <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
         <module name="VisibilityModifier">
             <property name="severity" value="ignore"/>
