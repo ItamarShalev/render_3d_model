@@ -1,9 +1,8 @@
 name: Code checks
 
 on:
-  push:
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   Build:
@@ -35,19 +34,19 @@ jobs:
         run: mvn test
 
   Lint:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout the project
-          uses: actions/checkout@v2
-        - name: Set up Python 3.10
-          uses: actions/setup-python@v2
-          with:
-            python-version: "3.10"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the project
+        uses: actions/checkout@v2
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
 
-        - name: Install packges for python
-          run: |
-            pip install lxml
-            pip install tabulate
+      - name: Install packges for python
+        run: |
+          pip install lxml
+          pip install tabulate
 
-        - name: Run checkstyle linter
-          run: python tools/Linter.py
+      - name: Run checkstyle linter
+        run: python tools/Linter.py

@@ -27,6 +27,7 @@
         https://checkstyle.org/config.html#Checker
         <property name="basedir" value="${basedir}"/>
     -->
+
     <property name="severity" value="error"/>
 
     <property name="fileExtensions" value="java, properties, xml"/>
@@ -39,7 +40,8 @@
 
     <!-- https://checkstyle.org/config_filters.html#SuppressionFilter -->
     <module name="SuppressionFilter">
-        <property name="file" value="${org.checkstyle.sun.suppressionfilter.config}" default="checkstyle-suppressions.xml" />
+        <property name="file" value="${org.checkstyle.sun.suppressionfilter.config}"
+                  default="checkstyle-suppressions.xml"/>
         <property name="optional" value="true"/>
     </module>
 
@@ -49,8 +51,9 @@
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
         <property name="max" value="100"/>
-        <property name="ignorePattern" value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
-        <property name="severity"  value="warning"/>
+        <property name="ignorePattern"
+                  value="^package.*|^import.*|a href|href|http://|https://|ftp://"/>
+        <property name="severity" value="warning"/>
     </module>
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
@@ -100,10 +103,12 @@
             <property name="validateThrows" value="true"/>
         </module>
         <module name="JavadocType"/>
-        <module name="JavadocVariable"/>
+        <module name="JavadocVariable">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="JavadocStyle"/>
         <module name="MissingJavadocMethod">
-            <property name="severity"  value="warning"/>
+            <property name="severity" value="warning"/>
         </module>
         <!-- Enables @SuppressWarnings Support                -->
         <module name="SuppressWarningsHolder"/>
@@ -144,7 +149,9 @@
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
-        <module name="WhitespaceAfter"/>
+        <module name="WhitespaceAfter">
+            <property name="tokens" value="COMMA, SEMI"/>
+        </module>
         <module name="WhitespaceAround"/>
 
         <!-- Modifier Checks                                    -->
@@ -167,7 +174,7 @@
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <module name="MagicNumber">
-            <property name="severity"  value="warning"/>
+            <property name="severity" value="warning"/>
         </module>
         <module name="MissingSwitchDefault"/>
         <module name="MultipleVariableDeclarations"/>
@@ -179,7 +186,9 @@
         <module name="DesignForExtension"/>
         <module name="HideUtilityClassConstructor"/>
         <module name="InterfaceIsType"/>
-        <module name="VisibilityModifier"/>
+        <module name="VisibilityModifier">
+            <property name="severity" value="ignore"/>
+        </module>
 
         <!-- Miscellaneous other checks.                   -->
         <!-- See https://checkstyle.org/config_misc.html -->
@@ -189,7 +198,8 @@
 
         <!-- https://checkstyle.org/config_filters.html#SuppressionXpathFilter -->
         <module name="SuppressionXpathFilter">
-            <property name="file" value="${org.checkstyle.sun.suppressionxpathfilter.config}" default="checkstyle-xpath-suppressions.xml" />
+            <property name="file" value="${org.checkstyle.sun.suppressionxpathfilter.config}"
+                      default="checkstyle-xpath-suppressions.xml"/>
             <property name="optional" value="true"/>
         </module>
 
