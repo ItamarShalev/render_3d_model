@@ -65,6 +65,10 @@ public class Point {
         return Math.sqrt(distanceSquared(point));
     }
 
+    public Double3 getXYZ() {
+        return xyz;
+    }
+
     @Override
     public int hashCode() {
         return xyz.hashCode();
