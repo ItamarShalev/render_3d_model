@@ -117,4 +117,9 @@ public class Vector extends Point {
         Vector other = (Vector)obj;
         return xyz.equals(other.xyz);
     }
+
+    @Override
+    public String toString() {
+        return "->" + super.toString();
+    }
 }
