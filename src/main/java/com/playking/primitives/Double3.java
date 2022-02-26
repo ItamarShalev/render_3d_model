@@ -101,4 +101,12 @@ class Double3 {
     Double3 product(Double3 rhs) {
         return new Double3(d1 * rhs.d1, d2 * rhs.d2, d3 * rhs.d3);
     }
+
+    /**
+     * Calculate the sum of the three doubles.
+     * @return sum of the three doubles
+     */
+    double sum() {
+        return d1 + d2 + d3;
+    }
 }

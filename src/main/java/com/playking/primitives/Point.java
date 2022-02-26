@@ -52,7 +52,8 @@ public class Point {
      */
     public double distanceSquared(Point point) {
         Double3 result = xyz.subtract(point.xyz);
-        return result.d1 * result.d1 + result.d2 * result.d2;
+        result = result.product(result);
+        return result.sum();
     }
 
     /**

@@ -39,8 +39,7 @@ public class Vector extends Point {
      * @return Amount of double components
      */
     public double dotProduct(Vector vector) {
-        Double3 result = xyz.product(vector.xyz);
-        return result.d1 + result.d2 + result.d3;
+        return xyz.product(vector.xyz).sum();
     }
 
     /**
@@ -74,7 +73,7 @@ public class Vector extends Point {
      * @return square length of the current vector
      */
     public double lengthSquared() {
-        return xyz.d1 * xyz.d1 + xyz.d2 * xyz.d2 + xyz.d3 * xyz.d3;
+        return xyz.product(xyz).sum();
     }
 
     /**
