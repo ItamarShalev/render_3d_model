@@ -3,8 +3,8 @@ package com.playking.tests;
 import static com.playking.primitives.Util.isZero;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import com.playking.primitives.Point;
 import com.playking.primitives.Vector;
@@ -29,11 +29,8 @@ class VectorTest {
 
     @Test
     public void vectorZeroTest() {
-        try {
-            new Vector(0, 0, 0);
-            fail("ERROR: zero vector does not throw an exception");
-        } catch (Exception ignored) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> new Vector(0, 0, 0),
+                     "ERROR: zero vector does not throw an exception");
     }
 
     @Test
@@ -45,12 +42,8 @@ class VectorTest {
     @Test
     public void productParallelTest() {
         assertTrue(isZero(v1.dotProduct(v2) + 28), "ERROR: dotProduct() wrong value");
-
-        try {
-            v1.crossProduct(v2);
-            fail("ERROR: crossProduct() for parallel vectors does not throw an exception");
-        } catch (Exception ignored) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> v1.crossProduct(v2),
+                     "ERROR: crossProduct() for parallel vectors does not throw an exception");
     }
 
     @Test
@@ -58,11 +51,8 @@ class VectorTest {
         Vector u = v1.normalize();
         assertFalse(v1.dotProduct(u) < 0,
                     "ERROR: the normalized vector is opposite to the original one");
-        try {
-            v1.crossProduct(u);
-            fail("ERROR: the normalized vector is not parallel to the original one");
-        } catch (Exception ignored) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> v1.crossProduct(u),
+                     "ERROR: the normalized vector is not parallel to the original one");
     }
 
     @Test
@@ -109,12 +99,8 @@ class VectorTest {
         Vector v1 = a.subtract(b);
         Vector v2 = b.subtract(a);
         assertTrue(isZero(v1.dotProduct(v2) + 206), "ERROR: dotProduct() wrong value");
-
-        try {
-            v1.crossProduct(v2);
-            fail("ERROR: the normalized vector is not parallel to the original one");
-        } catch (Exception ignored) {
-        }
+        assertThrows(IllegalArgumentException.class, () -> v1.crossProduct(v2),
+                     "ERROR: the normalized vector is not parallel to the original one");
     }
 
     @Test
