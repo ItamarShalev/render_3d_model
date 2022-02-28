@@ -15,7 +15,7 @@ public class Vector extends Point {
      * @param z axis z
      * @throws IllegalArgumentException if it's the zero vector
      */
-    public Vector(double x, double y, double z) {
+    public Vector(double x, double y, double z) throws IllegalArgumentException {
         this(new Double3(x, y, z));
     }
 
@@ -24,7 +24,7 @@ public class Vector extends Point {
      * @param xyz object contains the three axes
      * @throws IllegalArgumentException if it's the zero vector
      */
-    public Vector(Double3 xyz) {
+    public Vector(Double3 xyz) throws IllegalArgumentException {
         super(xyz);
         if (xyz.equals(Double3.ZERO)) {
             throw new IllegalArgumentException("Can't create vector zero !");
@@ -50,7 +50,7 @@ public class Vector extends Point {
      *     (current vector X param vector)
      * @throws IllegalArgumentException if the vectors are parallel
      */
-    public Vector crossProduct(Vector vector) {
+    public Vector crossProduct(Vector vector) throws IllegalArgumentException {
         double x = xyz.d2 * vector.xyz.d3 - xyz.d3 * vector.xyz.d2;
         double y = xyz.d3 * vector.xyz.d1 - xyz.d1 * vector.xyz.d3;
         double z = xyz.d1 * vector.xyz.d2 - xyz.d2 * vector.xyz.d1;
@@ -64,7 +64,7 @@ public class Vector extends Point {
      * @return the result vector after multiply by the number (current vector * number)
      * @throws IllegalArgumentException if the result vector is the zero vector
      */
-    public Vector scale(float number) {
+    public Vector scale(float number) throws IllegalArgumentException {
         return new Vector(xyz.scale(number));
     }
 
@@ -99,7 +99,7 @@ public class Vector extends Point {
      * @return the result vector after addition between the vectors (current vector + param vector)
      * @throws IllegalArgumentException if the result vector is the zero vector
      */
-    public Vector add(Vector vector) {
+    public Vector add(Vector vector) throws IllegalArgumentException {
         return new Vector(xyz.add(vector.xyz));
     }
 
