@@ -32,7 +32,7 @@ public class Point {
      * @return vector with the direction from point to the current point
      * @throws IllegalArgumentException if the result vector is the zero vector
      */
-    public Vector subtract(Point point) {
+    public Vector subtract(Point point) throws IllegalArgumentException {
         return new Vector(xyz.subtract(point.xyz));
     }
 
