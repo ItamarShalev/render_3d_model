@@ -1,7 +1,7 @@
 package com.playking.unittests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.playking.geometries.Polygon;
@@ -75,12 +75,19 @@ public class PolygonTests {
     @Test
     public void testGetNormal() {
 
-        /* ============ Equivalence Partitions Tests ============== */
-        /* TC01: There is a simple single test here */
-        Polygon pl = new Polygon(new Point(0, 0, 1), new Point(1, 0, 0), new Point(0, 1, 0),
-                                 new Point(-1, 1, 1));
+        Point a = new Point(0, 0, 1);
+        Point b = new Point(1, 0, 0);
+        Point c = new Point(0, 1, 0);
+        Point d = new Point(-1, 1, 1);
+        Polygon pl = new Polygon(a, b, c, d);
         double sqrt3 = Math.sqrt(1d / 3);
-        assertEquals(new Vector(sqrt3, sqrt3, sqrt3), pl.getNormal(new Point(0, 0, 1)),
-                     "Bad normal to trinagle");
+        Vector expectedVector = new Vector(sqrt3, sqrt3, sqrt3);
+
+
+        /* ============ Equivalence Partitions Tests ============== */
+
+        /* TC01: Check normal in specific point. */
+        assertTrue(expectedVector.isSameNormal(pl.getNormal(a)),
+                   "ERROR: getNormal() doesn't work correctly.");
     }
 }
