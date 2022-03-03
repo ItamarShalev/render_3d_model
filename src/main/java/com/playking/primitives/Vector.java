@@ -64,7 +64,7 @@ public class Vector extends Point {
      * @return the result vector after multiply by the number (current vector * number)
      * @throws IllegalArgumentException if the result vector is the zero vector
      */
-    public Vector scale(float number) throws IllegalArgumentException {
+    public Vector scale(double number) throws IllegalArgumentException {
         return new Vector(xyz.scale(number));
     }
 
