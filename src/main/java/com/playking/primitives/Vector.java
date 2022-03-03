@@ -92,6 +92,18 @@ public class Vector extends Point {
     }
 
     /**
+     * Check if the vector is the same normal.
+     * @param vector the vector to check
+     * @return true if the current length and the vector param are parallel and length equals 1
+     */
+    public boolean isSameNormal(Vector vector) {
+        if (!(Util.isZero(length() - 1) && Util.isZero(vector.length() - 1))) {
+            return false;
+        }
+        return equals(vector) || equals(vector.scale(-1));
+    }
+
+    /**
      * Calculate addition between two vectors.
      * (current vector + param vector)
      * @param vector the vector to add to current vector
