@@ -27,7 +27,7 @@ public class Plane implements Geometry {
      * @param p1 first point
      * @param p2 second point
      * @param p3 third point
-     * @throws IllegalArgumentException if the points can't create plane (parallel etc.)
+     * @throws IllegalArgumentException if the points on the same line some points are equals
      */
     public Plane(Point p1, Point p2, Point p3) throws IllegalArgumentException {
         if (p1.equals(p2) || p1.equals(p3) || p2.equals(p3)) {
