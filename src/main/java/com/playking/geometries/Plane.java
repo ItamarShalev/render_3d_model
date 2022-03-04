@@ -35,7 +35,7 @@ public class Plane implements Geometry {
         }
         Vector v1 = p2.subtract(p1);
         Vector v2 = p3.subtract(p1);
-        /* If the 3 points are on the same line the vectors will be parallel it will create exception */
+        /* Checks if the dots on it are straight, then throws an exception. */
         normal = v1.crossProduct(v2).normalize();
         p0 = p1;
     }

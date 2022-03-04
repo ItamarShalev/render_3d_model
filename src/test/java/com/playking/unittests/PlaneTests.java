@@ -31,11 +31,13 @@ public class PlaneTests {
 
         /* TC01: some points on the same line. */
         assertThrows(IllegalArgumentException.class, () -> new Plane(x1, y1, z1),
-                     "ERROR: Plane constructor should throw exception when some points on the same line");
+                     "ERROR: Plane constructor should throw exception "
+                     + "when some points on the same line");
 
         /* TC02: some points are the same. */
         assertThrows(IllegalArgumentException.class, () -> new Plane(xy2, xy2, z2),
-                     "ERROR: Plane constructor should throw exception when some points are the same");
+                     "ERROR: Plane constructor should throw exception "
+                     + "when some points are the same");
     }
 
     /**

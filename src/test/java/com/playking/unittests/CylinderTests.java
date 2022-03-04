@@ -58,10 +58,12 @@ public class CylinderTests {
 
         /* TC02: point in the center the top base. */
         assertEquals(exceptVectorCenterTopBase, cylinder.getNormal(topBaseCenterPoint),
-                     "ERROR: getNormal() point in the center on the top base doesn't work correctly.");
+                     "ERROR: getNormal() point in the center on the top base "
+                     + "doesn't work correctly.");
 
         /* TC02: point in the center the bottom base. */
         assertEquals(exceptVectorCenterBottomBase, cylinder.getNormal(bottomBaseCenterPoint),
-                     "ERROR: getNormal() point in the center on the top base doesn't work correctly.");
+                     "ERROR: getNormal() point in the center on the top base "
+                     + "doesn't work correctly.");
     }
 }
