@@ -19,7 +19,7 @@ public class Plane implements Geometry {
      */
     public Plane(Point p0, Vector normal) {
         this.p0 = p0;
-        this.normal = normal;
+        this.normal = normal.normalize();
     }
 
     /**
@@ -29,9 +29,15 @@ public class Plane implements Geometry {
      * @param p3 third point
      * @throws IllegalArgumentException if the points can't create plane (parallel etc.)
      */
-    public Plane(Point p1, Point p2, Point p3) {
+    public Plane(Point p1, Point p2, Point p3) throws IllegalArgumentException {
+        if (p1.equals(p2) || p1.equals(p3) || p2.equals(p3)) {
+            throw new IllegalArgumentException("Points can't be the same on the plane.");
+        }
+        Vector v1 = p2.subtract(p1);
+        Vector v2 = p3.subtract(p1);
+        /* If the 3 points are on the same line the vectors will be parallel it will create exception */
+        normal = v1.crossProduct(v2).normalize();
         p0 = p1;
-        normal = null;
     }
 
 
@@ -45,6 +51,6 @@ public class Plane implements Geometry {
 
     @Override
     public Vector getNormal(Point point) {
-        return null;
+        return normal;
     }
 }
