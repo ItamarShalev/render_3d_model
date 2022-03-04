@@ -52,28 +52,6 @@ public class VectorTests {
     }
 
     /**
-     * Test method for {@link Vector#subtract(Vector)}.
-     */
-    @Test
-    public void testSubtract() {
-
-        Vector p1 = new Vector(1, 2, 3);
-        Vector p3 = new Vector(2, 4, 7);
-
-        /* ============ Equivalence Partitions Tests ============== */
-
-        /* TC01: Subtract valid point to valid vector. */
-        assertEquals(new Vector(1, 2, 4), p3.subtract(p1),
-                     "ERROR: Vector - Vector does not work correctly");
-
-        /* =============== Boundary Values Tests ================== */
-
-        /* TC02: Check if the zero vector result handle correctly */
-        assertThrows(IllegalArgumentException.class, () -> p1.subtract(p1),
-                     "ERROR: Vector - Vector doesn't work correctly in zero vector");
-    }
-
-    /**
      * Test method for {@link Vector#scale(double)}.
      */
     @Test

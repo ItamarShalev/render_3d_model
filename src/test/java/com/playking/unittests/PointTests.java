@@ -83,7 +83,7 @@ public class PointTests {
 
         /* ============ Equivalence Partitions Tests ============== */
 
-        /* TC02: Check with valid points. */
+        /* TC01: Check with valid points. */
         assertTrue(Util.isZero(p1.distance(p2) - 29.34280150224242),
                    "ERROR: distance() doesn't work correctly");
 
