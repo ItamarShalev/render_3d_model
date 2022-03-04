@@ -31,7 +31,6 @@ public class Vector extends Point {
         }
     }
 
-
     /**
      * Calculate dot product between two vectors.
      * (current vector * param vector)
@@ -115,7 +114,7 @@ public class Vector extends Point {
             return false;
         }
         Vector other = (Vector)obj;
-        return xyz.equals(other.xyz);
+        return super.equals(obj);
     }
 
     @Override
