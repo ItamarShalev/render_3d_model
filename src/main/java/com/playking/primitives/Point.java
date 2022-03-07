@@ -15,7 +15,7 @@ public class Point {
      * @param z for axis z
      */
     public Point(double x, double y, double z) {
-        this(new Double3(x, y, z));
+        xyz = new Double3(x, y, z);
     }
 
     /**
