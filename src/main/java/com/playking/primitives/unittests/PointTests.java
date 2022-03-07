@@ -1,4 +1,4 @@
-package com.playking.unittests;
+package com.playking.primitives.unittests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
