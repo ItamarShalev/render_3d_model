@@ -45,7 +45,7 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install packges for python
+      - name: Install packages for python
         run: |
           pip install lxml
           pip install tabulate
