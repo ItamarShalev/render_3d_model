@@ -19,8 +19,13 @@ public class Ray {
         this.dir = dir.normalize();
     }
 
+
     public Point getP0() {
         return p0;
+    }
+
+    public Point getP0(double t) {
+        return getP0().add(getDir().scale(t));
     }
 
     public Vector getDir() {

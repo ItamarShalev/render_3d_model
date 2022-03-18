@@ -4,6 +4,7 @@ import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import com.playking.primitives.Util;
 import com.playking.primitives.Vector;
+import java.util.List;
 
 /**
  * Class describe cylinder not infinite tube.
@@ -61,5 +62,10 @@ public class Cylinder extends Tube {
         }
         /* The point on the side, handle it like a tube. */
         return super.getNormal(point);
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return super.findIntersections(ray);
     }
 }

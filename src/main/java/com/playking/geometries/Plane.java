@@ -1,7 +1,12 @@
 package com.playking.geometries;
 
+import static com.playking.primitives.Util.alignZero;
+import static com.playking.primitives.Util.isZero;
+
 import com.playking.primitives.Point;
+import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
+import java.util.List;
 
 /**
  * Class describe plane,
@@ -40,7 +45,6 @@ public class Plane implements Geometry {
         p0 = p1;
     }
 
-
     public Point getP0() {
         return p0;
     }
@@ -52,5 +56,40 @@ public class Plane implements Geometry {
     @Override
     public Vector getNormal(Point point) {
         return normal;
+    }
+
+    /**
+     * Finds the intersections of a Ray with the current object.
+     * @param ray The ray to intersect
+     * @return List of the intersections - 3D points
+     */
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        Point p0 = ray.getP0();
+        Point p = null;
+        if (this.p0.equals(p0)) {
+            return null;
+        }
+
+        Vector v = ray.getDir();
+        Vector n = normal;
+        Vector p0DistanceQ0 = this.p0.subtract(p0);
+        double numerator = alignZero(n.dotProduct(p0DistanceQ0));
+        double denominator = alignZero(n.dotProduct(v));
+        double t = alignZero(numerator / denominator);
+
+        if (isZero(numerator)) {
+            return null;
+        }
+        // ray is lying in the plane axis
+        if (isZero(denominator)) {
+            return null;
+        }
+        if (t <= 0) {
+            return null;
+        }
+
+        p = ray.getP0(t);
+        return List.of(p);
     }
 }
