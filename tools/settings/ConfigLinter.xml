@@ -135,7 +135,9 @@
 
         <!-- Checks for Size Violations.                    -->
         <!-- See https://checkstyle.org/config_sizes.html -->
-        <module name="MethodLength"/>
+        <module name="MethodLength">
+            <property name="max" value="160"/>
+        </module>
         <module name="ParameterNumber"/>
 
         <!-- Checks for whitespace                               -->
@@ -145,7 +147,6 @@
         <module name="MethodParamPad"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
-        <module name="OperatorWrap"/>
         <module name="ParenPad"/>
         <module name="TypecastParenPad"/>
         <module name="WhitespaceAfter">
@@ -172,7 +173,6 @@
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <module name="MissingSwitchDefault"/>
-        <module name="MultipleVariableDeclarations"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
 
