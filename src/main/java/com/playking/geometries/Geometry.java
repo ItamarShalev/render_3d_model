@@ -6,7 +6,7 @@ import com.playking.primitives.Vector;
 /**
  * Interface for Geometry.
  */
-public interface Geometry {
+public interface Geometry extends Intersect {
 
     /**
      * Calculate the normal vector by the point.
