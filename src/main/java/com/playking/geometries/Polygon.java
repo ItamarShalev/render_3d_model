@@ -3,6 +3,7 @@ package com.playking.geometries;
 import static com.playking.primitives.Util.isZero;
 
 import com.playking.primitives.Point;
+import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
 import java.util.List;
 
@@ -92,5 +93,10 @@ public class Polygon implements Geometry {
     @Override
     public Vector getNormal(Point point) {
         return plane.getNormal();
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
     }
 }
