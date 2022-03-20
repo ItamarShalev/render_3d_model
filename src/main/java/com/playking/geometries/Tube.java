@@ -4,6 +4,7 @@ import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import com.playking.primitives.Util;
 import com.playking.primitives.Vector;
+import java.util.List;
 
 /**
  * Class describe tube, the tube is infinity.
@@ -46,5 +47,10 @@ public class Tube implements Geometry {
         /* The point on the side calculate the normal */
         Point center = axisRay.getP0().add(axisRay.getDir().scale(t));
         return point.subtract(center).normalize();
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
     }
 }
