@@ -53,9 +53,9 @@ public class Vector extends Point {
      * @throws IllegalArgumentException if the vectors are parallel
      */
     public Vector crossProduct(Vector vector) throws IllegalArgumentException {
-        double x = xyz.d2 * vector.xyz.d3 - xyz.d3 * vector.xyz.d2;
-        double y = xyz.d3 * vector.xyz.d1 - xyz.d1 * vector.xyz.d3;
-        double z = xyz.d1 * vector.xyz.d2 - xyz.d2 * vector.xyz.d1;
+        double x = getY() * vector.getZ() - getZ() * vector.getY();
+        double y = getZ() * vector.getX() - getX() * vector.getZ();
+        double z = getX() * vector.getY() - getY() * vector.getX();
         return new Vector(x, y, z);
     }
 
