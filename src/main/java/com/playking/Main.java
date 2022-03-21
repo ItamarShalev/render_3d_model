@@ -15,22 +15,23 @@ import com.playking.primitives.Vector;
 public final class Main {
 
     /**
-     * Main program to tests initial functionality of the 1st stage.
+     * Main program to test initial functionality of the 1st stage.
      * @param args irrelevant here
      */
     public static void main(String[] args) {
 
-        try { // test zero vector
+        /* test zero vector */
+        try {
             new Vector(0, 0, 0);
             out.println("ERROR: zero vector does not throw an exception");
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         Vector v1 = new Vector(1, 2, 3);
         Vector v2 = new Vector(-2, -4, -6);
         Vector v3 = new Vector(0, 3, -2);
 
-        // test length..
+        /* test length.. */
         if (!isZero(v1.lengthSquared() - 14)) {
             out.println("ERROR: lengthSquared() wrong value");
         }
@@ -38,7 +39,7 @@ public final class Main {
             out.println("ERROR: length() wrong value");
         }
 
-        // test Dot-Product
+        /* test Dot-Product */
         if (!isZero(v1.dotProduct(v3))) {
             out.println("ERROR: dotProduct() for orthogonal vectors is not zero");
         }
@@ -46,8 +47,8 @@ public final class Main {
             out.println("ERROR: dotProduct() wrong value");
         }
 
-        // test Cross-Product
-        try { // test zero vector
+        /* test Cross-Product, test zero vector*/
+        try {
             v1.crossProduct(v2);
             out.println("ERROR: crossProduct() for parallel vectors does not throw an exception");
         } catch (Exception ignored) {
@@ -60,13 +61,14 @@ public final class Main {
             out.println("ERROR: crossProduct() result is not orthogonal to its operands");
         }
 
-        // test vector normalization vs vector length and cross-product
+        /* test vector normalization vs vector length and cross-product */
         Vector v = new Vector(1, 2, 3);
         Vector u = v.normalize();
         if (!isZero(u.length() - 1)) {
             out.println("ERROR: the normalized vector is not a unit vector");
         }
-        try { // test that the vectors are co-lined
+        /* test that the vectors are co-lined */
+        try {
             v.crossProduct(u);
             out.println("ERROR: the normalized vector is not parallel to the original one");
         } catch (Exception ignored) {
@@ -75,7 +77,7 @@ public final class Main {
             out.println("ERROR: the normalized vector is opposite to the original one");
         }
 
-        // Test operations with points and vectors
+        /* Test operations with points and vectors */
         Point p1 = new Point(1, 2, 3);
         if (!(p1.add(new Vector(-1, -2, -3)).equals(new Point(0, 0, 0)))) {
             out.println("ERROR: Point + Vector does not work correctly");
