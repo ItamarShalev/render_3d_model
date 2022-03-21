@@ -1,5 +1,6 @@
 package com.playking.renderer;
 
+import static com.playking.primitives.Util.alignZero;
 import static com.playking.primitives.Util.isZero;
 
 import com.playking.geometries.Intersect;
@@ -95,7 +96,26 @@ public class Camera {
      * @return ray from p0 the center to the center of the pixel in row i column j
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
-        return null;
+        Vector dir;
+        Point pointCenter, pointCenterPixel;
+        double ratioY, ratioX, yI, xJ;
+
+        pointCenter = p0.add(vectorTo.scale(distance));
+        ratioY = alignZero(height / nY);
+        ratioX = alignZero(width / nX);
+
+        pointCenterPixel = pointCenter;
+        yI = alignZero(-1 * (i - (nY - 1) / 2d) * ratioY);
+        xJ = alignZero((j - (nX - 1) / 2d) * ratioX);
+        if (!isZero(xJ)) {
+            pointCenterPixel = pointCenterPixel.add(vectorRight.scale(xJ));
+        }
+        if (!isZero(yI)) {
+            pointCenterPixel = pointCenterPixel.add(vectorUp.scale(yI));
+        }
+        dir = pointCenterPixel.subtract(p0);
+
+        return new Ray(p0, dir);
     }
 
     public List<Point> findIntersections(int nX, int nY, Intersect intersect) {
