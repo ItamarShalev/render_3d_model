@@ -1,8 +1,9 @@
 package com.playking.geometries;
 
+import static com.playking.primitives.Util.isZero;
+
 import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
-import com.playking.primitives.Util;
 import com.playking.primitives.Vector;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class Cylinder extends Tube {
      */
     public Cylinder(Ray axisRay, double radius, double height) {
         super(axisRay, radius);
-        if (height < 0 || Util.isZero(height)) {
+        if (height < 0 || isZero(height)) {
             throw new IllegalArgumentException("Height can't be zero or negative.");
         }
         this.height = height;
@@ -36,28 +37,27 @@ public class Cylinder extends Tube {
     public Vector getNormal(Point point) {
         Point p0 = axisRay.getP0();
         /* The point is on the bottom */
-        Vector v0;
-        try {
-            v0 = p0.subtract(point);
-        } catch (IllegalArgumentException ignored) {
-            /* The point is exactly in the center. */
+        Vector vector, vector1;
+        Point point1;
+        /* The point is exactly in the center. */
+        if (point.equals(p0)) {
             return axisRay.getDir().scale(-1);
         }
-        if (Util.isZero(v0.dotProduct(axisRay.getDir()))) {
-            /* The point on the bottom but not in the center */
+        vector = p0.subtract(point);
+        /* The point on the bottom but not in the center */
+        if (isZero(vector.dotProduct(axisRay.getDir()))) {
             return axisRay.getDir().scale(-1);
         }
 
-        Point p1 = p0.add(axisRay.getDir().scale(height));
-        Vector v1;
-        try {
-            v1 = p1.subtract(point);
-        } catch (IllegalArgumentException ignored) {
-            /* The point is exactly in the center. */
+        point1 = p0.add(axisRay.getDir().scale(height));
+
+        /* The point is exactly in the center. */
+        if (point.equals(point1)) {
             return axisRay.getDir();
         }
-        if (Util.isZero(v1.dotProduct(axisRay.getDir()))) {
-            /* The point on the top but not in the center */
+        vector1 = point1.subtract(point);
+        /* The point on the top but not in the center */
+        if (isZero(vector1.dotProduct(axisRay.getDir()))) {
             return axisRay.getDir();
         }
         /* The point on the side, handle it like a tube. */
