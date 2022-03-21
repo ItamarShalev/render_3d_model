@@ -36,12 +36,10 @@ public class Plane implements Geometry {
      * @throws IllegalArgumentException if the points on the same line some points are equals
      */
     public Plane(Point p1, Point p2, Point p3) throws IllegalArgumentException {
-        if (p1.equals(p2) || p1.equals(p3) || p2.equals(p3)) {
-            throw new IllegalArgumentException("Points can't be the same on the plane.");
-        }
+        /* If there are some points that equals IllegalArgumentException will be thrown here */
         Vector v1 = p2.subtract(p1);
         Vector v2 = p3.subtract(p1);
-        /* Checks if the dots on it are straight, then throws an exception. */
+        /* Checks if the dots on it are straight, then IllegalArgumentException will be thrown */
         normal = v1.crossProduct(v2).normalize();
         p0 = p1;
     }
