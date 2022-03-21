@@ -1,4 +1,4 @@
-package com.playking.primitives.unittests;
+package com.playking.unittests.primitives;
 
 import static com.playking.primitives.Util.isZero;
 import static org.junit.jupiter.api.Assertions.assertEquals;

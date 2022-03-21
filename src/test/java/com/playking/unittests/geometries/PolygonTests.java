@@ -1,4 +1,4 @@
-package com.playking.geometries.unittests;
+package com.playking.unittests.geometries;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;

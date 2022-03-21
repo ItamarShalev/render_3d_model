@@ -39,7 +39,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <build>
-        <testSourceDirectory>src</testSourceDirectory>
+        <testSourceDirectory>src/test/java/com/playking/unittests</testSourceDirectory>
         <pluginManagement>
             <plugins>
                 <plugin>
