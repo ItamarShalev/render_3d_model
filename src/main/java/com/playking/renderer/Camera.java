@@ -2,9 +2,12 @@ package com.playking.renderer;
 
 import static com.playking.primitives.Util.isZero;
 
+import com.playking.geometries.Intersect;
 import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Camera {
     private final Point p0;
@@ -93,5 +96,22 @@ public class Camera {
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
         return null;
+    }
+
+    public List<Point> findIntersections(int nX, int nY, Intersect intersect) {
+        Ray ray;
+        List<Point> result = new LinkedList<>();
+        List<Point> intersectionPoints;
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                ray = constructRay(nX, nY, i, j);
+                intersectionPoints = intersect.findIntersections(ray);
+                if (intersectionPoints != null) {
+                    result.addAll(intersectionPoints);
+                }
+            }
+        }
+        return result.isEmpty() ? null : result;
     }
 }
