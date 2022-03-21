@@ -119,17 +119,7 @@ public class Vector extends Point {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (!(obj instanceof Vector)) {
-            return false;
-        }
-        Vector other = (Vector)obj;
-        return super.equals(obj);
+        return obj instanceof Vector && super.equals(obj);
     }
 
     @Override
