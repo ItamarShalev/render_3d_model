@@ -196,6 +196,13 @@ public class Camera {
         return new Ray(p0, dir);
     }
 
+    /**
+     * Find all the intersection points with the plan view and geometry.
+     * @param nX row count pixels
+     * @param nY column count pixels
+     * @param intersect the intersect-able object with the rays from the view plane
+     * @return list of all the points that intersect, if there is no intersect point return null
+     */
     public List<Point> findIntersections(int nX, int nY, Intersect intersect) {
         Ray ray;
         List<Point> result = new LinkedList<>();
