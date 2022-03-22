@@ -1,5 +1,7 @@
 ########Custom files#########
 
+images/
+
 *.bak
 
 #Inteliji config
