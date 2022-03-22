@@ -32,8 +32,26 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+      - name: Create "images" directory for image tests
+        run: |
+          rm -rf imagesResult
+          mkdir images
       - name: Test with Maven
         run: mvn test -B
+      - name: pack the results
+        run: |
+          mv images imagesResult
+          mkdir images
+          mv imagesResult images/
+          ls -la
+          cd images 
+          ls -la
+      - name: Upload test images to "images"
+        uses: actions/upload-artifact@v3
+        with:
+          name: images
+          path: images
+          retention-days: 60
 
   Lint:
     runs-on: ubuntu-latest
@@ -52,3 +70,26 @@ jobs:
 
       - name: Run checkstyle linter
         run: python tools/Linter.py
+
+  UploadTestTesult:
+    runs-on: ubuntu-latest
+    needs: Test
+    steps:
+      - name: Checkout the project
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.TOKEN }}
+      - name: Remove old imagesResult directory
+        run: |
+          rm -rf imagesResult
+      - name: Download images result from artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: images
+      - name: Add the images to the repository in main-automation branch
+        run: |
+          git config --global user.email "${{ github.event.pusher.email }}"
+          git config --global user.name "${{ github.event.pusher.name }}"
+          git add imagesResult
+          git commit -sm "[BOT] unittest: Add all the images from the last push."
+          git push -f -u origin HEAD:imagesResult
