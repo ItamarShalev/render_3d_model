@@ -4,6 +4,7 @@ import static com.playking.primitives.Util.alignZero;
 import static com.playking.primitives.Util.isZero;
 
 import com.playking.geometries.Intersect;
+import com.playking.primitives.Axis;
 import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
@@ -11,10 +12,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Camera {
-    private final Point p0;
-    private final Vector vectorTo;
-    private final Vector vectorUp;
-    private final Vector vectorRight;
+    private Vector vectorTo;
+    private Vector vectorUp;
+    private Vector vectorRight;
+    private Point p0;
     private int distance;
     private double width;
     private double height;
@@ -84,6 +85,83 @@ public class Camera {
     public Camera setSize(double width, double height) {
         this.width = width;
         this.height = height;
+        return this;
+    }
+
+    /**
+     * Helper for {@link #rotation(double, Axis)}.
+     * @param vector the vector to rotate
+     * @param radians an angle in radians
+     * @return the result vector after the rotation
+     */
+    private Vector rotationAxisZ(Vector vector, double radians) {
+        double cos = Math.cos(radians);
+        double sin = Math.sin(radians);
+        double axisX = vector.getX() * cos - vector.getY() * sin;
+        double axisY = vector.getX() * sin + vector.getY() * cos;
+        return new Vector(axisX, axisY, vector.getZ());
+    }
+
+    /**
+     * Helper for {@link #rotation(double, Axis)}.
+     * @param vector the vector to rotate
+     * @param radians an angle in radians
+     * @return the result vector after the rotation
+     */
+    private Vector rotationAxisY(Vector vector, double radians) {
+        double cos = Math.cos(radians);
+        double sin = Math.sin(radians);
+        double axisX = vector.getX() * cos + vector.getZ() * sin;
+        double axisZ = vector.getZ() * cos - vector.getX() * sin;
+        return new Vector(axisX, vector.getY(), axisZ);
+    }
+
+    /**
+     * Helper for {@link #rotation(double, Axis)}.
+     * @param vector the vector to rotate
+     * @param radians an angle in radians
+     * @return the result vector after the rotation
+     */
+    private Vector rotationAxisX(Vector vector, double radians) {
+        double cos = Math.cos(radians);
+        double sin = Math.sin(radians);
+        double axisY = vector.getY() * cos - vector.getZ() * sin;
+        double axisZ = vector.getY() * sin + vector.getZ() * cos;
+        return new Vector(vector.getX(), axisY, axisZ);
+    }
+
+    /**
+     * Rotating the camera by degree in radians.
+     * @param radians the degrees in radians
+     * @param axis to which axis to rotate
+     * @return the camera itself
+     */
+    public Camera rotation(double radians, Axis axis) {
+        switch (axis) {
+            case X:
+                vectorTo = rotationAxisX(vectorTo, radians);
+                vectorUp = rotationAxisX(vectorUp, radians);
+                break;
+            case Y:
+                vectorTo = rotationAxisY(vectorTo, radians);
+                vectorUp = rotationAxisY(vectorUp, radians);
+                break;
+            case Z:
+                vectorTo = rotationAxisZ(vectorTo, radians);
+                vectorUp = rotationAxisZ(vectorUp, radians);
+                break;
+        }
+        vectorRight = vectorTo.crossProduct(vectorUp);
+        return this;
+    }
+
+    /**
+     * Shift the camera to the direction of the vector with the distance.
+     * @param vector direction with distance
+     * @return the camera itself
+     */
+    public Camera shift(Vector vector) {
+        p0 = p0.add(vector);
         return this;
     }
 
