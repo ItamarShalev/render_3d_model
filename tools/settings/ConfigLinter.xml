@@ -172,7 +172,6 @@
         <module name="EmptyStatement"/>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
-        <module name="MissingSwitchDefault"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
 
