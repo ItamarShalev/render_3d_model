@@ -1,4 +1,4 @@
-package com.playking.unittests.renderer;
+package renderer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
  * Testing Camera Class.
  * @author Dan
  */
-class CameraTest {
+public class CameraTests {
 
     private static final Point ZERO_POINT = new Point(0, 0, 0);
 
