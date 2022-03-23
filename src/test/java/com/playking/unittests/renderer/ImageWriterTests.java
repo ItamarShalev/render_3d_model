@@ -22,13 +22,13 @@ public class ImageWriterTests {
         boolean isOnTheLine = true;
         ImageWriter imageWriter = new ImageWriter("ImageBasic", nx, ny);
 
-        for (int i = 0; i < ny; i++) {
-            for (int j = 0; j < nx; j++) {
+        for (int i = 0; i < nx; i++) {
+            for (int j = 0; j < ny; j++) {
                 isOnTheLine = i % (nx / rows) == 0 || j % (ny / columns) == 0;
                 if (isOnTheLine) {
-                    imageWriter.writePixel(j, i, Color.RED);
+                    imageWriter.writePixel(i, j, Color.RED);
                 } else {
-                    imageWriter.writePixel(j, i, Color.YELLOW);
+                    imageWriter.writePixel(i, j, Color.YELLOW);
                 }
             }
         }
