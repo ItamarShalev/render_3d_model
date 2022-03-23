@@ -1,6 +1,8 @@
 package com.playking.primitives;
 
 
+import java.util.List;
+
 /**
  * Class describe ray, start with some point and has a direction.
  */
@@ -29,6 +31,15 @@ public class Ray {
 
     public Vector getDir() {
         return dir;
+    }
+
+    /**
+     * Find the closest point to current ray.
+     * @param points list of points
+     * @return the closest point to ray, if there are no points, return null
+     */
+    public Point findClosestPoint(List<Point> points) {
+        return null;
     }
 
     @Override
