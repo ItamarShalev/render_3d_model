@@ -1,4 +1,4 @@
-package com.playking.render;
+package com.playking.renderer;
 
 import com.playking.primitives.Color;
 import com.playking.primitives.Ray;
