@@ -1,17 +1,21 @@
-package com.playking.renderer;
+package com.playking.render;
 
 import static com.playking.primitives.Util.alignZero;
 import static com.playking.primitives.Util.isZero;
 
 import com.playking.geometries.Intersect;
 import com.playking.primitives.Axis;
+import com.playking.primitives.Color;
 import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.MissingResourceException;
 
 public class Camera {
+    private static final double ERROR_VALUE_DOUBLE = -1d;
+    private static final int ERROR_VALUE_INT = -1;
     private Vector vectorTo;
     private Vector vectorUp;
     private Vector vectorRight;
@@ -19,6 +23,8 @@ public class Camera {
     private int distance;
     private double width;
     private double height;
+    private ImageWriter imageWriter;
+    private RayTracerBase rayTracer;
 
     /**
      * Constructor to create new Camera.
@@ -35,6 +41,9 @@ public class Camera {
             throw new IllegalArgumentException("ERROR: vectorTo and vectorUp must be orthogonal");
         }
         this.vectorRight = vectorTo.crossProduct(vectorUp).normalize();
+        distance = ERROR_VALUE_INT;
+        width = ERROR_VALUE_DOUBLE;
+        height = ERROR_VALUE_DOUBLE;
     }
 
     public Point getP0() {
@@ -86,6 +95,49 @@ public class Camera {
         this.width = width;
         this.height = height;
         return this;
+    }
+
+
+    public Camera setImageWriter(ImageWriter imageWriter) {
+        this.imageWriter = imageWriter;
+        return this;
+    }
+
+    public Camera setRayTracer(RayTracerBase rayTracer) {
+        this.rayTracer = rayTracer;
+        return this;
+    }
+
+
+    /**
+     * Helper to check if some resource is missing.
+     * @throws MissingResourceException if some resource is missing
+     */
+    private void checkAndThrowIfMissingResources() throws MissingResourceException {
+        String errorMessage = "ERROR: Missing resource name: ";
+        String key = "";
+
+        if (rayTracer == null) {
+            throw new MissingResourceException(errorMessage + "rayTracer",
+                                               RayTracerBase.class.getName(), key);
+        }
+        if (imageWriter == null) {
+            throw new MissingResourceException(errorMessage + "imageWriter",
+                                               ImageWriter.class.getName(), key);
+        }
+        if (p0 == null) {
+            throw new MissingResourceException(errorMessage + "p0", Point.class.getName(), key);
+        }
+        if (isZero(height - ERROR_VALUE_DOUBLE)) {
+            throw new MissingResourceException(errorMessage + "height", double.class.getName(),
+                                               key);
+        }
+        if (isZero(width - ERROR_VALUE_DOUBLE)) {
+            throw new MissingResourceException(errorMessage + "width", double.class.getName(), key);
+        }
+        if (distance == ERROR_VALUE_INT) {
+            throw new MissingResourceException(errorMessage + "distance", int.class.getName(), key);
+        }
     }
 
     /**
@@ -218,5 +270,50 @@ public class Camera {
             }
         }
         return result.isEmpty() ? null : result;
+    }
+
+    public void renderImage() throws MissingResourceException {
+        checkAndThrowIfMissingResources();
+        Ray ray;
+        Color color;
+        int nX = imageWriter.getNx();
+        int nY = imageWriter.getNy();
+
+        for (int i = 0; i < nX; i++) {
+            for (int j = 0; j < nY; j++) {
+                ray = constructRay(nX, nY, i, j);
+                color = rayTracer.traceRay(ray);
+                imageWriter.writePixel(i, j, color);
+            }
+        }
+    }
+
+    /**
+     * Print grid with line as color param.
+     * @param interval how many unit size to color (in height and width)
+     * @param color the color to color the grid
+     * @throws MissingResourceException if some resource is missing
+     */
+    public void printGrid(int interval, Color color) throws MissingResourceException {
+        checkAndThrowIfMissingResources();
+        boolean isOnTheLine = true;
+        for (int i = 0; i < imageWriter.getNx(); i++) {
+            for (int j = 0; j < imageWriter.getNy(); j++) {
+                isOnTheLine = i % interval == 0 || j % interval == 0;
+                if (isOnTheLine) {
+                    imageWriter.writePixel(i, j, color);
+                }
+            }
+        }
+        imageWriter.writeToImage();
+    }
+
+    /**
+     * Actual write the image.
+     * @throws MissingResourceException if some resource is missing
+     */
+    public void writeToImage() throws MissingResourceException {
+        checkAndThrowIfMissingResources();
+        imageWriter.writeToImage();
     }
 }
