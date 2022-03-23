@@ -25,7 +25,7 @@ public class Geometries implements Intersect {
      * Add more geometries to the list.
      * @param geometries Geometries to add to current list
      */
-    private void add(Intersect... geometries) {
+    public void add(Intersect... geometries) {
         this.geometries.addAll(Arrays.asList(geometries));
     }
 
