@@ -49,4 +49,20 @@ public class RenderTests {
         camera.printGrid(100, Color.YELLOW);
         camera.writeToImage();
     }
+
+    /**
+     * Test for XML based scene.
+     */
+    @Test
+    public void basicRenderXml() {
+        Scene scene = new Scene("XML Test scene");
+        // enter XML file name and parse from XML file into scene object
+        Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, 1, 0))
+            .setDistance(100).setSize(500, 500)
+            .setImageWriter(new ImageWriter("xml render test", 1000, 600))
+            .setRayTracer(new RayTracerBasic(scene));
+        camera.renderImage();
+        camera.printGrid(100, Color.YELLOW);
+        camera.writeToImage();
+    }
 }
