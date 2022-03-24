@@ -1,5 +1,7 @@
 package renderer;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.playking.elements.AmbientLight;
 import com.playking.geometries.Sphere;
 import com.playking.geometries.Triangle;
@@ -7,10 +9,12 @@ import com.playking.primitives.Color;
 import com.playking.primitives.Double3;
 import com.playking.primitives.Point;
 import com.playking.primitives.Vector;
+import com.playking.primitives.XmlHelper;
 import com.playking.renderer.Camera;
 import com.playking.renderer.ImageWriter;
 import com.playking.renderer.RayTracerBasic;
 import com.playking.scene.Scene;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 
@@ -52,14 +56,16 @@ public class RenderTests {
 
     /**
      * Test for XML based scene.
+     * @throws IOException when the file isn't exist
      */
     @Test
-    public void basicRenderXml() {
-        Scene scene = new Scene("XML Test scene");
-        // enter XML file name and parse from XML file into scene object
+    public void basicRenderXml() throws IOException {
+        Scene scene = XmlHelper.readSceneObjectFromXml("basicRenderTestTwoColors.xml");
+        assertNotNull(scene);
+        scene.name = "XML Test scene";
         Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setDistance(100).setSize(500, 500)
-            .setImageWriter(new ImageWriter("xml render test", 1000, 600))
+            .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
             .setRayTracer(new RayTracerBasic(scene));
         camera.renderImage();
         camera.printGrid(100, Color.YELLOW);

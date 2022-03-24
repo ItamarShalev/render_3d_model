@@ -2,10 +2,12 @@ package com.playking.elements;
 
 import com.playking.primitives.Color;
 import com.playking.primitives.Double3;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Class describe Ambient light.
  */
+@XmlRootElement(name = "ambient-light")
 public class AmbientLight {
     Color intensity;
 
