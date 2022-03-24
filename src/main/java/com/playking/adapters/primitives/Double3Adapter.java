@@ -1,5 +1,6 @@
-package com.playking.adapter;
+package com.playking.adapters.primitives;
 
+import com.playking.adapters.Adapter;
 import com.playking.primitives.Double3;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;

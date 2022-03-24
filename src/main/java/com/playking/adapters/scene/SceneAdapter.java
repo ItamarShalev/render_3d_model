@@ -1,5 +1,9 @@
-package com.playking.adapter;
+package com.playking.adapters.scene;
 
+import com.playking.adapters.Adapter;
+import com.playking.adapters.AmbientLightAdapter;
+import com.playking.adapters.geometries.GeometriesAdapter;
+import com.playking.adapters.primitives.ColorAdapter;
 import com.playking.scene.Scene;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -7,17 +11,19 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "scene")
 public class SceneAdapter implements Adapter<Scene> {
+    @XmlAttribute(name = "name")
+    private String name;
     @XmlAttribute(name = "background")
-    String background;
+    private String background;
     @XmlElement(name = "ambient-light")
-    AmbientLightAdapter ambientLight;
+    private AmbientLightAdapter ambientLight;
     @XmlElement(name = "geometries")
-    GeometriesAdapter geometries;
+    private GeometriesAdapter geometries;
 
 
     @Override
     public Scene build() {
-        Scene scene = new Scene("");
+        Scene scene = new Scene(name);
         scene.setBackground(ColorAdapter.parseColor(background)).setAmbient(ambientLight.build())
              .addGeometry(geometries.build());
         return scene;

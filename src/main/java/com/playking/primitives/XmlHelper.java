@@ -1,6 +1,6 @@
 package com.playking.primitives;
 
-import com.playking.adapter.SceneAdapter;
+import com.playking.adapters.scene.SceneAdapter;
 import com.playking.scene.Scene;
 import java.io.File;
 import java.io.IOException;

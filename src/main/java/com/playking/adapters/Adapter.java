@@ -1,4 +1,4 @@
-package com.playking.adapter;
+package com.playking.adapters;
 
 /**
  * Interface to force adapter to create the origin object.

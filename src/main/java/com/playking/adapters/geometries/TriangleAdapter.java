@@ -1,5 +1,7 @@
-package com.playking.adapter;
+package com.playking.adapters.geometries;
 
+import com.playking.adapters.Adapter;
+import com.playking.adapters.primitives.PointAdapter;
 import com.playking.geometries.Triangle;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,11 +12,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TriangleAdapter implements Adapter<Triangle> {
     @XmlAttribute
-    String p1;
+    private String p1;
     @XmlAttribute
-    String p2;
+    private String p2;
     @XmlAttribute
-    String p3;
+    private String p3;
 
     @Override
     public Triangle build() {

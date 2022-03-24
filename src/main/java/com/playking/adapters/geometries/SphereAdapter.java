@@ -1,5 +1,7 @@
-package com.playking.adapter;
+package com.playking.adapters.geometries;
 
+import com.playking.adapters.Adapter;
+import com.playking.adapters.primitives.PointAdapter;
 import com.playking.geometries.Sphere;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,9 +12,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SphereAdapter implements Adapter<Sphere> {
     @XmlAttribute
-    String center;
+    private String center;
     @XmlAttribute
-    String radius;
+    private String radius;
 
     @Override
     public Sphere build() {
