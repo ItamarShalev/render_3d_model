@@ -81,10 +81,10 @@ public class RenderTests {
             .setRayTracer(new RayTracerBasic(scene)).setDistance(200).setSize(500, 500);
         camera.setDistance(100);
         GifSequenceWriter writer = new GifSequenceWriter(FOLDER_PATH + "/" + name + "BasicGif.gif");
-        for (int i = 0; i < 50; i++) {
-            ImageWriter imageWriter = new ImageWriter("basicXmlGif", 1000, 1000);
+        for (int i = 0; i < 20; i++) {
+            ImageWriter imageWriter = new ImageWriter("basicXmlGif", 500, 500);
             camera.setImageWriter(imageWriter);
-            camera.rotation(Math.toRadians(360 / 50d), axis);
+            camera.rotation(Math.toRadians(360 / 20d), axis);
             camera.renderImage();
             writer.writeToSequence(camera.printGridToImage(100, Color.YELLOW).getImage());
             writer.writeToSequence(imageWriter.getImage());
