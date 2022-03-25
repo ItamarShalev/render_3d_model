@@ -16,6 +16,7 @@ import java.util.MissingResourceException;
 public class Camera {
     private static final double ERROR_VALUE_DOUBLE = -1d;
     private static final int ERROR_VALUE_INT = -1;
+    private static final int MAX_THREADS = 16;
     private Vector vectorTo;
     private Vector vectorUp;
     private Vector vectorRight;
@@ -295,6 +296,17 @@ public class Camera {
      * @throws MissingResourceException if some resource is missing
      */
     public void printGrid(int interval, Color color) throws MissingResourceException {
+        printGridToImage(interval, color).writeToImage();
+    }
+
+    /**
+     * Create the image grid without actually print.
+     * @param interval how many unit size to color (in height and width)
+     * @param color the color to color the grid
+     * @return the image writer object of the image
+     * @throws MissingResourceException if some resource is missing
+     */
+    public ImageWriter printGridToImage(int interval, Color color) throws MissingResourceException {
         checkAndThrowIfMissingResources();
         boolean isOnTheLine = true;
         for (int i = 0; i < imageWriter.getNx(); i++) {
@@ -305,7 +317,7 @@ public class Camera {
                 }
             }
         }
-        imageWriter.writeToImage();
+        return imageWriter;
     }
 
     /**

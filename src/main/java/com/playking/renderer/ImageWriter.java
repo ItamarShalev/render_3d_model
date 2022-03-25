@@ -40,6 +40,10 @@ public class ImageWriter {
         image = new BufferedImage(nX, nY, BufferedImage.TYPE_INT_RGB);
     }
 
+    public BufferedImage getImage() {
+        return image;
+    }
+
     /**
      * View Plane Y axis resolution.
      * @return the amount of vertical pixels

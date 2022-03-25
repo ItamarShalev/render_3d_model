@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scene name="XML Test polygon" background="75 127 190">
+<scene name="Basic Gif" background="75 127 190">
     <ambient-light color="255 191 191"/>
     <geometries>
         <sphere center="0 0 -100" radius="50"/>
