@@ -12,6 +12,8 @@ import com.playking.primitives.Vector;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.MissingResourceException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Camera {
     private static final double ERROR_VALUE_DOUBLE = -1d;
@@ -275,17 +277,25 @@ public class Camera {
 
     public void renderImage() throws MissingResourceException {
         checkAndThrowIfMissingResources();
-        Ray ray;
-        Color color;
-        int nX = imageWriter.getNx();
-        int nY = imageWriter.getNy();
+        ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
 
-        for (int i = 0; i < nX; i++) {
-            for (int j = 0; j < nY; j++) {
-                ray = constructRay(nX, nY, i, j);
-                color = rayTracer.traceRay(ray);
-                imageWriter.writePixel(i, j, color);
-            }
+        for (int row = 0; row < imageWriter.getNx(); row++) {
+            int finalRow = row;
+            Runnable runnable = () -> {
+                Ray ray;
+                Color color;
+                int nY = imageWriter.getNy();
+                for (int j = 0; j < nY; j++) {
+                    ray = constructRay(imageWriter.getNx(), nY, finalRow, j);
+                    color = rayTracer.traceRay(ray);
+                    imageWriter.writePixel(finalRow, j, color);
+                }
+            };
+            executor.execute(runnable);
+        }
+        executor.shutdown();
+        while (!executor.isTerminated()) {
+            continue;
         }
     }
 
