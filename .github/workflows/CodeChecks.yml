@@ -79,9 +79,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           token: ${{ secrets.TOKEN }}
-      - name: Remove old imagesResult directory
-        run: |
-          rm -rf imagesResult
       - name: Download images result from artifact
         uses: actions/download-artifact@v3
         with:
