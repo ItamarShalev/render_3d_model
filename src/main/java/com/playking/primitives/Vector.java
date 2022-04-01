@@ -1,6 +1,11 @@
 package com.playking.primitives;
 
 
+import static com.playking.primitives.Util.alignZero;
+
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Class describe vector.
  * all the method return new vector and doesn't change the current one.
@@ -35,6 +40,31 @@ public class Vector extends Point {
     }
 
     /**
+     * Calculate the matrix rotation.
+     * @param axis the given axis to calculate the matrix
+     * @param theta the angle to rotate
+     * @return the matrix rotation
+     */
+    public static List<Vector> getMatrixRotation(Vector axis, double theta) {
+        double radian = -theta * Math.PI / 180;
+        double x = axis.getX();
+        double y = axis.getY();
+        double z = axis.getZ();
+
+        double cos = alignZero(Math.cos(radian));
+        double sin = alignZero(Math.sin(radian));
+        double cosMinus = (1 - cos);
+
+        Vector rotateX = new Vector(x * x * cosMinus + cos, x * y * cosMinus - z * sin,
+                                    x * z * cosMinus + y * sin);
+        Vector rotateY = new Vector(y * x * cosMinus + z * sin, y * y * cosMinus + cos,
+                                    y * z * cosMinus - x * sin);
+        Vector rotateZ = new Vector(z * x * cosMinus - y * sin, z * y * cosMinus + x * sin,
+                                    z * z * cosMinus + cos);
+        return Arrays.asList(rotateX, rotateY, rotateZ);
+    }
+
+    /**
      * Calculate dot product between two vectors.
      * (current vector * param vector)
      * @param vector the vector to product with current vector
@@ -57,6 +87,23 @@ public class Vector extends Point {
         double y = getZ() * vector.getX() - getX() * vector.getZ();
         double z = getX() * vector.getY() - getY() * vector.getX();
         return new Vector(x, y, z);
+    }
+
+    /**
+     * Multiply the current vector by the matrix.
+     * @param matrix the matrix to multiply the current vector
+     * @return the result vector after multiply by the matrix
+     * @throws IllegalArgumentException if the matrix size isn't 3x3
+     */
+    public Vector matrixProduct(List<Vector> matrix) throws IllegalArgumentException {
+        if (matrix.size() != 3) {
+            throw new IllegalArgumentException("ERROR: Matrix must be 3x3");
+        }
+        double[] xyz = new double[3];
+        for (int i = 0; i < 3; i++) {
+            xyz[i] = dotProduct(matrix.get(i));
+        }
+        return new Vector(xyz[0], xyz[1], xyz[2]);
     }
 
     /**
