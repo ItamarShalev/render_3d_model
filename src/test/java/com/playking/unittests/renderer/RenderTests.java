@@ -58,6 +58,23 @@ public class RenderTests {
         camera.writeToImage();
     }
 
+    /**
+     * Simple X axis rotation.
+     * @throws IOException if some file isn't exist
+     */
+    @Test
+    public void rotationX() throws IOException {
+        basicGifXml("rotationX", Axis.X);
+    }
+
+    /**
+     * Simple Y axis rotation.
+     * @throws IOException if some file isn't exist
+     */
+    @Test
+    public void rotationY() throws IOException {
+        basicGifXml("rotationY", Axis.Y);
+    }
 
     /**
      * Simple Z axis rotation.
@@ -77,17 +94,19 @@ public class RenderTests {
     public void basicGifXml(String name, Axis axis) throws IOException {
         Scene scene = XmlHelper.readSceneObjectFromXml("basicGif.xml");
         assertNotNull(scene);
+        int interval = 20;
         Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setRayTracer(new RayTracerBasic(scene)).setDistance(200).setSize(500, 500);
         camera.setDistance(100);
         GifSequenceWriter writer = new GifSequenceWriter(FOLDER_PATH + "/" + name + "BasicGif.gif");
-        for (int i = 0; i < 20; i++) {
+
+        for (int i = 0; i < interval; i++) {
             ImageWriter imageWriter = new ImageWriter("basicXmlGif", 500, 500);
             camera.setImageWriter(imageWriter);
-            camera.rotation(Math.toRadians(360 / 20d), axis);
             camera.renderImage();
             writer.writeToSequence(camera.printGridToImage(100, Color.YELLOW).getImage());
             writer.writeToSequence(imageWriter.getImage());
+            camera.rotation(10, axis);
         }
         writer.close();
     }

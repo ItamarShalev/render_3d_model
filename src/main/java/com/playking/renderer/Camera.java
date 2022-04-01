@@ -144,48 +144,6 @@ public class Camera {
     }
 
     /**
-     * Helper for {@link #rotation(double, Axis)}.
-     * @param vector the vector to rotate
-     * @param radians an angle in radians
-     * @return the result vector after the rotation
-     */
-    private Vector rotationAxisZ(Vector vector, double radians) {
-        double cos = Math.cos(radians);
-        double sin = Math.sin(radians);
-        double axisX = vector.getX() * cos - vector.getY() * sin;
-        double axisY = vector.getX() * sin + vector.getY() * cos;
-        return new Vector(axisX, axisY, vector.getZ());
-    }
-
-    /**
-     * Helper for {@link #rotation(double, Axis)}.
-     * @param vector the vector to rotate
-     * @param radians an angle in radians
-     * @return the result vector after the rotation
-     */
-    private Vector rotationAxisY(Vector vector, double radians) {
-        double cos = Math.cos(radians);
-        double sin = Math.sin(radians);
-        double axisX = vector.getX() * cos + vector.getZ() * sin;
-        double axisZ = vector.getZ() * cos - vector.getX() * sin;
-        return new Vector(axisX, vector.getY(), axisZ);
-    }
-
-    /**
-     * Helper for {@link #rotation(double, Axis)}.
-     * @param vector the vector to rotate
-     * @param radians an angle in radians
-     * @return the result vector after the rotation
-     */
-    private Vector rotationAxisX(Vector vector, double radians) {
-        double cos = Math.cos(radians);
-        double sin = Math.sin(radians);
-        double axisY = vector.getY() * cos - vector.getZ() * sin;
-        double axisZ = vector.getY() * sin + vector.getZ() * cos;
-        return new Vector(vector.getX(), axisY, axisZ);
-    }
-
-    /**
      * Rotating the camera by degree in radians.
      * @param radians the degrees in radians
      * @param axis to which axis to rotate
@@ -194,19 +152,49 @@ public class Camera {
     public Camera rotation(double radians, Axis axis) {
         switch (axis) {
             case X:
-                vectorTo = rotationAxisX(vectorTo, radians);
-                vectorUp = rotationAxisX(vectorUp, radians);
-                break;
+                return rotateAxisX(radians);
             case Y:
-                vectorTo = rotationAxisY(vectorTo, radians);
-                vectorUp = rotationAxisY(vectorUp, radians);
-                break;
+                return rotateAxisY(radians);
             case Z:
-                vectorTo = rotationAxisZ(vectorTo, radians);
-                vectorUp = rotationAxisZ(vectorUp, radians);
-                break;
+                return rotateAxisZ(radians);
         }
+        return this;
+    }
+
+    /**
+     * Helper for {@link #rotation(double, Axis)}.
+     * @param theta an angle in radians
+     * @return the result vector after the rotation
+     */
+    public Camera rotateAxisX(double theta) {
+        List<Vector> matrix = Vector.getMatrixRotation(vectorTo, theta);
+        vectorRight = vectorRight.matrixProduct(matrix).normalize();
+        vectorUp = vectorUp.matrixProduct(matrix).normalize();
+        return this;
+    }
+
+    /**
+     * Helper for {@link #rotation(double, Axis)}.
+     * @param theta an angle in radians
+     * @return the result vector after the rotation
+     */
+    public Camera rotateAxisY(double theta) {
+        List<Vector> matrix = Vector.getMatrixRotation(vectorRight, theta);
+        vectorTo = vectorTo.matrixProduct(matrix);
+        vectorUp = vectorUp.matrixProduct(matrix);
         vectorRight = vectorTo.crossProduct(vectorUp);
+        return this;
+    }
+
+    /**
+     * Helper for {@link #rotation(double, Axis)}.
+     * @param theta an angle in radians
+     * @return the result vector after the rotation
+     */
+    public Camera rotateAxisZ(double theta) {
+        List<Vector> matrix = Vector.getMatrixRotation(vectorUp, theta);
+        vectorTo = vectorTo.matrixProduct(matrix);
+        vectorRight = vectorRight.matrixProduct(matrix);
         return this;
     }
 
