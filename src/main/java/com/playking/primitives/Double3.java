@@ -27,6 +27,16 @@ public class Double3 {
         this.d3 = d3;
     }
 
+    /**
+     * Constructor to initialize Double3 based object the same number values.
+     * @param value number value for all 3 numbers
+     */
+    public Double3(double value) {
+        this.d1 = value;
+        this.d2 = value;
+        this.d3 = value;
+    }
+
     @Override
     public int hashCode() {
         return (int)Math.round(d1 + d2 + d3);
