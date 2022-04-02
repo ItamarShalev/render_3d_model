@@ -43,4 +43,19 @@ public class Geometries extends Intersect {
 
         return result;
     }
+
+    @Override
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        List<GeoPoint> result = new LinkedList<>();
+
+        for (Intersect item : geometries) {
+            List<GeoPoint> itemIntersectionPoints = item.findGeoIntersections(ray);
+            if (itemIntersectionPoints != null) {
+                result.addAll(itemIntersectionPoints);
+            }
+        }
+        result = result.isEmpty() ? null : result;
+
+        return result;
+    }
 }

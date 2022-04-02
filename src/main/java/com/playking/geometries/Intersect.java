@@ -16,6 +16,19 @@ public abstract class Intersect {
      */
     public abstract List<Point> findIntersections(Ray ray);
 
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        return null;
+    }
+
+    /**
+     * Find the nearest intersection point from the ray.
+     * @param ray MUST be not null, The ray tested at the intersection of the object
+     * @return The nearest point that intersection with the object
+     */
+    public List<GeoPoint> findGeoIntersections(Ray ray) {
+        return findGeoIntersectionsHelper(ray);
+    }
+
 
     /**
      * GeoPoint contains the geometry and the point on the geometry.
