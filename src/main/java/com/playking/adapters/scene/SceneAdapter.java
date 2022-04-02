@@ -1,8 +1,8 @@
 package com.playking.adapters.scene;
 
 import com.playking.adapters.Adapter;
-import com.playking.adapters.AmbientLightAdapter;
 import com.playking.adapters.geometries.GeometriesAdapter;
+import com.playking.adapters.lighting.AmbientLightAdapter;
 import com.playking.adapters.primitives.ColorAdapter;
 import com.playking.scene.Scene;
 import javax.xml.bind.annotation.XmlAttribute;

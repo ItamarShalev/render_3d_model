@@ -1,7 +1,8 @@
-package com.playking.adapters;
+package com.playking.adapters.lighting;
 
+import com.playking.adapters.Adapter;
 import com.playking.adapters.primitives.ColorAdapter;
-import com.playking.elements.AmbientLight;
+import com.playking.lighting.AmbientLight;
 import com.playking.primitives.Double3;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;

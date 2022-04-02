@@ -1,8 +1,8 @@
 package com.playking.scene;
 
-import com.playking.elements.AmbientLight;
 import com.playking.geometries.Geometries;
 import com.playking.geometries.Intersect;
+import com.playking.lighting.AmbientLight;
 import com.playking.primitives.Color;
 
 /**

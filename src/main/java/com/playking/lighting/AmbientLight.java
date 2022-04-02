@@ -1,4 +1,4 @@
-package com.playking.elements;
+package com.playking.lighting;
 
 import com.playking.primitives.Color;
 import com.playking.primitives.Double3;

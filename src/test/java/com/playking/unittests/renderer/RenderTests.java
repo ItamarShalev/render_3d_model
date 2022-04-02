@@ -2,9 +2,9 @@ package renderer;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.playking.elements.AmbientLight;
 import com.playking.geometries.Sphere;
 import com.playking.geometries.Triangle;
+import com.playking.lighting.AmbientLight;
 import com.playking.primitives.Axis;
 import com.playking.primitives.Color;
 import com.playking.primitives.Double3;
