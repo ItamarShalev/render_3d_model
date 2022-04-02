@@ -209,6 +209,28 @@ public class Camera {
     }
 
     /**
+     * Shift the camera to the direction of the axis of the camera with the distance.
+     * @param axis direction axis of the camera
+     * @param distance how many unit to move
+     * @return the camera itself
+     */
+    public Camera shift(double distance, Axis axis) {
+        Vector dir = null;
+        switch (axis) {
+            case X:
+                dir = vectorTo;
+                break;
+            case Y:
+                dir = vectorUp;
+                break;
+            case Z:
+                dir = vectorRight;
+                break;
+        }
+        return shift(dir.scale(distance));
+    }
+
+    /**
      * Find a ray from p0 to the center of the pixel from the given resolution.
      * @param nX the number of the rows
      * @param nY the number of the columns
