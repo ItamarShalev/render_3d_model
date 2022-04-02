@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Class describe tube, the tube is infinity.
  */
-public class Tube implements Geometry {
+public class Tube extends Geometry {
 
     protected final Ray axisRay;
     protected final double radius;

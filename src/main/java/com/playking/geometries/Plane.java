@@ -13,7 +13,7 @@ import java.util.List;
  * Class describe plane,
  * contains some point on the surface and normal vector from the point.
  */
-public class Plane implements Geometry {
+public class Plane extends Geometry {
 
     private final Point p0;
     private final Vector normal;

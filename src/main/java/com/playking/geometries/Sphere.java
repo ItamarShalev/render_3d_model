@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Class describe sphere.
  */
-public class Sphere implements Geometry {
+public class Sphere extends Geometry {
 
     private final Point center;
     private final double radius;
