@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Composite class for all geometries.
  */
-public class Geometries implements Intersect {
+public class Geometries extends Intersect {
 
     private final List<Intersect> geometries;
 

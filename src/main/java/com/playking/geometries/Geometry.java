@@ -7,7 +7,7 @@ import com.playking.primitives.Vector;
 /**
  * Interface for Geometry.
  */
-public abstract class Geometry implements Intersect {
+public abstract class Geometry extends Intersect {
 
     protected Color emission;
 
