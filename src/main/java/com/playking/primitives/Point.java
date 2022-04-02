@@ -6,6 +6,7 @@ package com.playking.primitives;
  */
 public class Point {
 
+    public static final Point ZERO = new Point(0, 0, 0);
     protected final Double3 xyz;
 
     /**

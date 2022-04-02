@@ -16,6 +16,7 @@ import com.playking.renderer.GifSequenceWriter;
 import com.playking.renderer.ImageWriter;
 import com.playking.renderer.RayTracerBasic;
 import com.playking.scene.Scene;
+import java.io.File;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
@@ -25,8 +26,8 @@ import org.junit.jupiter.api.Test;
  * @author Dan
  */
 public class RenderTests {
-    private static final Point ZERO_POINT = new Point(0, 0, 0);
-    private static final String FOLDER_PATH = System.getProperty("user.dir") + "/images";
+    private static final String FOLDER_PATH = new File(System.getProperty("user.dir"),
+                                                       "images").getAbsolutePath();
 
 
     /**
@@ -48,7 +49,7 @@ public class RenderTests {
                              new Triangle(new Point(100, 0, -100), new Point(0, -100, -100),
                                           new Point(100, -100, -100)));
 
-        Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, 1, 0))
+        Camera camera = new Camera(Point.ZERO, new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setDistance(100).setSize(500, 500)
             .setImageWriter(new ImageWriter("base render test", 1000, 1000))
             .setRayTracer(new RayTracerBasic(scene));
@@ -95,7 +96,7 @@ public class RenderTests {
         Scene scene = XmlHelper.readSceneObjectFromXml("basicGif.xml");
         assertNotNull(scene);
         int interval = 20;
-        Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, 1, 0))
+        Camera camera = new Camera(Point.ZERO, new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setRayTracer(new RayTracerBasic(scene)).setDistance(200).setSize(500, 500);
         camera.setDistance(100);
         GifSequenceWriter writer = new GifSequenceWriter(FOLDER_PATH + "/" + name + "BasicGif.gif");
@@ -120,7 +121,7 @@ public class RenderTests {
         Scene scene = XmlHelper.readSceneObjectFromXml("basicRenderTestTwoColors.xml");
         assertNotNull(scene);
         scene.name = "XML Test scene";
-        Camera camera = new Camera(ZERO_POINT, new Vector(0, 0, -1), new Vector(0, 1, 0))
+        Camera camera = new Camera(Point.ZERO, new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setDistance(100).setSize(500, 500)
             .setImageWriter(new ImageWriter("xml render test", 1000, 1000))
             .setRayTracer(new RayTracerBasic(scene));

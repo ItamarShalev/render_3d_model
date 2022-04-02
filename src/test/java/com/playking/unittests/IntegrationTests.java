@@ -27,10 +27,9 @@ public class IntegrationTests {
 
     @BeforeAll
     public static void setupAll() {
-        Point pointZero = new Point(0, 0, 0);
         vectorTo = new Vector(0, 0, -1);
         vectorUp = new Vector(0, 1, 0);
-        camera = new Camera(pointZero, vectorTo, vectorUp);
+        camera = new Camera(Point.ZERO, vectorTo, vectorUp);
     }
 
 
