@@ -44,7 +44,8 @@ public class PointLight extends Light implements LightSource {
      * @return Factor to reduce the intensity of the light.
      */
     protected double getReduceFactor(Point point) {
-        return kC + kL * position.distance(point) + kQ * position.distanceSquared(point);
+        double distance = position.distance(point);
+        return kC + kL * distance + kQ * distance * distance;
     }
 
     @Override
@@ -54,6 +55,9 @@ public class PointLight extends Light implements LightSource {
 
     @Override
     public Vector getL(Point point) {
+        if (point == null) {
+            return null;
+        }
         return point.subtract(position).normalize();
     }
 }
