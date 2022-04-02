@@ -1,6 +1,7 @@
 package renderer;
 
 import static java.awt.Color.BLUE;
+import static java.awt.Color.GRAY;
 import static java.awt.Color.GREEN;
 import static java.awt.Color.RED;
 import static java.awt.Color.WHITE;
@@ -72,7 +73,7 @@ public class RenderTests {
         Scene scene = new Scene("Test scene");
         scene.setAmbient(new AmbientLight(new Color(WHITE), new Double3(0.2)));
 
-        scene.geometries.add(new Sphere(new Point(0, 0, -100), 50),
+        scene.geometries.add(new Sphere(new Point(0, 0, -100), 50).setEmission(new Color(GRAY)),
                              // up left
                              new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100),
                                           new Point(-100, 100, -100)).setEmission(new Color(GREEN)),
