@@ -91,6 +91,19 @@ public class Color {
 
     /**
      * Scale the color by a scalar.
+     * @param k scale factor MUST be positive
+     * @return new Color object which is the result of the operation
+     * @throws IllegalArgumentException if k is negative
+     */
+    public Color scale(double k) throws IllegalArgumentException {
+        if (k < 0.0) {
+            throw new IllegalArgumentException("Can't scale a color by a negative number");
+        }
+        return new Color(rgb.scale(k));
+    }
+
+    /**
+     * Scale the color by a scalar.
      * @param k scale factor
      * @return new Color object which is the result of the operation
      * @throws IllegalArgumentException if one or more of the numbers are negative
@@ -100,6 +113,19 @@ public class Color {
             throw new IllegalArgumentException("Can't scale a color by a negative number");
         }
         return new Color(rgb.product(k));
+    }
+
+    /**
+     * Scale the color by (1 / reduction factor).
+     * @param k reduction factor MUST be bigger than 1
+     * @return new Color object which is the result of the operation
+     * @throws IllegalArgumentException if k is less than 1
+     */
+    public Color reduce(double k) throws IllegalArgumentException {
+        if (k < 1) {
+            throw new IllegalArgumentException("Can't scale a color by a by a number lower than 1");
+        }
+        return new Color(rgb.reduce(k));
     }
 
     /**
