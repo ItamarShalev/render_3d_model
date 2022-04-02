@@ -1,6 +1,7 @@
 package com.playking.primitives;
 
 
+import com.playking.geometries.Intersect.GeoPoint;
 import java.util.List;
 
 /**
@@ -59,6 +60,34 @@ public class Ray {
             }
         }
         return closestPoint;
+    }
+
+    /**
+     * Find the closest point to current ray.
+     * @param points list of geo points
+     * @return the closest geo point to ray, if there are no points, return null
+     */
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> points) {
+        GeoPoint closestGeoPoint = null;
+        double minDistance = 0;
+        double distance = 0;
+        if (points == null || points.isEmpty()) {
+            return null;
+        }
+
+        for (GeoPoint geoPoint : points) {
+            if (closestGeoPoint == null) {
+                closestGeoPoint = geoPoint;
+                minDistance = closestGeoPoint.point.distanceSquared(p0);
+                continue;
+            }
+            distance = geoPoint.point.distanceSquared(p0);
+            if (distance < minDistance) {
+                closestGeoPoint = geoPoint;
+                minDistance = distance;
+            }
+        }
+        return closestGeoPoint;
     }
 
     @Override
