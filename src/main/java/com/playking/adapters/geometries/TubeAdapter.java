@@ -1,8 +1,10 @@
 package com.playking.adapters.geometries;
 
 import com.playking.adapters.Adapter;
+import com.playking.adapters.primitives.ColorAdapter;
 import com.playking.adapters.primitives.RayAdapter;
 import com.playking.geometries.Tube;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -14,8 +16,13 @@ public class TubeAdapter implements Adapter<Tube> {
     @XmlElement
     private String radius;
 
+    @XmlAttribute
+    private String color;
+
     @Override
     public Tube build() {
-        return new Tube(ray.build(), Double.parseDouble(radius));
+        ColorAdapter colorAdapter = new ColorAdapter(color);
+        return (Tube)new Tube(ray.build(), Double.parseDouble(radius)).setEmission(
+            colorAdapter.build());
     }
 }

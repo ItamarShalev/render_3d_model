@@ -1,6 +1,7 @@
 package com.playking.adapters.geometries;
 
 import com.playking.adapters.Adapter;
+import com.playking.adapters.primitives.ColorAdapter;
 import com.playking.geometries.Cylinder;
 import com.playking.geometries.Tube;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -15,9 +16,14 @@ public class CylinderAdapter implements Adapter<Cylinder> {
     @XmlAttribute
     private String height;
 
+    @XmlAttribute
+    private String color;
+
     @Override
     public Cylinder build() {
         Tube tube = this.tube.build();
-        return new Cylinder(tube.getAxisRay(), tube.getRadius(), Double.parseDouble(height));
+        return (Cylinder)new Cylinder(tube.getAxisRay(), tube.getRadius(),
+                                      Double.parseDouble(height)).setEmission(
+            ColorAdapter.parseColor(color));
     }
 }

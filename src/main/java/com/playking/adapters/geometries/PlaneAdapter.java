@@ -1,6 +1,7 @@
 package com.playking.adapters.geometries;
 
 import com.playking.adapters.Adapter;
+import com.playking.adapters.primitives.ColorAdapter;
 import com.playking.adapters.primitives.Double3Adapter;
 import com.playking.adapters.primitives.PointAdapter;
 import com.playking.geometries.Plane;
@@ -17,9 +18,13 @@ public class PlaneAdapter implements Adapter<Plane> {
     @XmlAttribute
     private String normal;
 
+    @XmlAttribute
+    private String color;
+
     @Override
     public Plane build() {
-        return new Plane(PointAdapter.parsePoint(p0),
-                         new Vector(Double3Adapter.parseDouble3(normal)));
+        return (Plane)new Plane(PointAdapter.parsePoint(p0),
+                                new Vector(Double3Adapter.parseDouble3(normal))).setEmission(
+            ColorAdapter.parseColor(color));
     }
 }
