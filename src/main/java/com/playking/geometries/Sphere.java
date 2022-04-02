@@ -35,12 +35,12 @@ public class Sphere extends Geometry {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         /* In case that p0 is same as center */
         if (ray.getP0().equals(center)) {
-            return List.of(center.add(ray.getDir().scale(radius)));
+            return List.of(new GeoPoint(this, center.add(ray.getDir().scale(radius))));
         }
-        List<Point> result = new LinkedList<>();
+        List<GeoPoint> result = new LinkedList<>();
         double tm, d, th, t1, t2;
         Point p0 = ray.getP0();
         Vector vector = ray.getDir();
@@ -57,11 +57,11 @@ public class Sphere extends Geometry {
         if (d < radius) {
             if (t1 > 0) {
                 Point p1 = p0.add(vector.scale(t1));
-                result.add(p1);
+                result.add(new GeoPoint(this, p1));
             }
             if (t2 > 0) {
                 Point p2 = p0.add(vector.scale(t2));
-                result.add(p2);
+                result.add(new GeoPoint(this, p2));
             }
         }
 

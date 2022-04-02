@@ -1,6 +1,5 @@
 package com.playking.geometries;
 
-import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -27,21 +26,6 @@ public class Geometries extends Intersect {
      */
     public void add(Intersect... geometries) {
         this.geometries.addAll(Arrays.asList(geometries));
-    }
-
-    @Override
-    public List<Point> findIntersections(Ray ray) {
-        List<Point> result = new LinkedList<>();
-
-        for (Intersect item : geometries) {
-            List<Point> itemIntersectionPoints = item.findIntersections(ray);
-            if (itemIntersectionPoints != null) {
-                result.addAll(itemIntersectionPoints);
-            }
-        }
-        result = result.isEmpty() ? null : result;
-
-        return result;
     }
 
     @Override

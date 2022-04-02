@@ -14,11 +14,22 @@ public abstract class Intersect {
      * @param ray MUST be not null, The ray tested at the intersection of the object
      * @return List of points that intersection with the object
      */
-    public abstract List<Point> findIntersections(Ray ray);
-
-    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        return null;
+    public List<Point> findIntersections(Ray ray) {
+        List<GeoPoint> geoList = findGeoIntersections(ray);
+        List<Point> result = null;
+        if (geoList != null) {
+            result = geoList.stream().map(GeoPoint::getPoint)
+                            .collect(java.util.stream.Collectors.toList());
+        }
+        return result;
     }
+
+    /**
+     * Find all GeoPoints from the ray.
+     * @param ray MUST be not null, The ray tested at the intersection of the object
+     * @return List of GeoPoints that intersection with the object
+     */
+    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
 
     /**
      * Find the nearest intersection point from the ray.
@@ -40,6 +51,14 @@ public abstract class Intersect {
         public GeoPoint(Geometry geometry, Point point) {
             this.geometry = geometry;
             this.point = point;
+        }
+
+        public Geometry getGeometry() {
+            return geometry;
+        }
+
+        public Point getPoint() {
+            return point;
         }
 
         @Override

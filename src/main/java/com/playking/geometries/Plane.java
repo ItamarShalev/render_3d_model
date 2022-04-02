@@ -57,17 +57,18 @@ public class Plane extends Geometry {
         return normal;
     }
 
+
     /**
      * Finds the intersections of a Ray with the current object.
      * @param ray The ray to intersect
      * @return List of points all the intersections, if there is no intersections return null
      */
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         if (p0.equals(ray.getP0())) {
             return null;
         }
-        List<Point> result = null;
+        List<GeoPoint> result = null;
         Vector p0DistanceQ0;
         Vector vector = ray.getDir();
         double numerator, denominator, t;
@@ -81,7 +82,7 @@ public class Plane extends Geometry {
         isThereNoIntersections = isZero(numerator) || isZero(denominator) || t <= 0;
         if (!isThereNoIntersections) {
             result = new LinkedList<>();
-            result.add(ray.getP0(t));
+            result.add(new GeoPoint(this, ray.getP0(t)));
         }
 
         return result;

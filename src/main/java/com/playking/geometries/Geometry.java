@@ -2,10 +2,7 @@ package com.playking.geometries;
 
 import com.playking.primitives.Color;
 import com.playking.primitives.Point;
-import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Interface for Geometry.
@@ -41,18 +38,4 @@ public abstract class Geometry extends Intersect {
      * @return normal vector from the location of the point on the surface of the geometry
      */
     public abstract Vector getNormal(Point point);
-
-    @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        List<Point> intersections = findIntersections(ray);
-        List<GeoPoint> result = null;
-
-        if (intersections != null) {
-            result = new LinkedList<>();
-            for (Point intersection : intersections) {
-                result.add(new GeoPoint(this, intersection));
-            }
-        }
-        return result;
-    }
 }

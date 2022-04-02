@@ -28,12 +28,12 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         /* If ray doesn't intersect the plan consist in triangle return null */
         if (plane.findIntersections(ray) == null) {
             return null;
         }
-        List<Point> result = null;
+        List<GeoPoint> result = null;
         Vector vector, vector1, vector2, vector3;
         Vector normal1, normal2, normal3;
         Point point1, point2, point3;
@@ -62,7 +62,7 @@ public class Triangle extends Polygon {
                                vector.dotProduct(normal3) < 0;
 
         if (isThereIntersections) {
-            result = plane.findIntersections(ray);
+            result = plane.findGeoIntersectionsHelper(ray);
         }
         return result;
     }
