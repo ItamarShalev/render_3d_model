@@ -285,7 +285,7 @@ public class Camera {
         return result.isEmpty() ? null : result;
     }
 
-    public void renderImage() throws MissingResourceException {
+    public Camera renderImage() throws MissingResourceException {
         checkAndThrowIfMissingResources();
         ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
 
@@ -307,6 +307,7 @@ public class Camera {
         while (!executor.isTerminated()) {
             continue;
         }
+        return this;
     }
 
     /**
@@ -342,10 +343,12 @@ public class Camera {
 
     /**
      * Actual write the image.
+     * @return the camera itself
      * @throws MissingResourceException if some resource is missing
      */
-    public void writeToImage() throws MissingResourceException {
+    public Camera writeToImage() throws MissingResourceException {
         checkAndThrowIfMissingResources();
         imageWriter.writeToImage();
+        return this;
     }
 }

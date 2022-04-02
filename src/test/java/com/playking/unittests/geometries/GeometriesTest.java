@@ -13,7 +13,7 @@ import com.playking.primitives.Vector;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-class GeometriesTest {
+public class GeometriesTest {
 
     @Test
     void testFindIntersections() {
