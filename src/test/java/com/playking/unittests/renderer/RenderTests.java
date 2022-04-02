@@ -130,7 +130,7 @@ public class RenderTests {
     public void basicGifXml(String name, Axis axis) throws IOException {
         Scene scene = XmlHelper.readSceneObjectFromXml("basicGif.xml");
         assertNotNull(scene);
-        int interval = 20;
+        int interval = 5;
         Camera camera = new Camera(Point.ZERO, new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setRayTracer(new RayTracerBasic(scene)).setDistance(200).setSize(500, 500);
         camera.setDistance(100);
@@ -142,7 +142,7 @@ public class RenderTests {
             camera.renderImage();
             writer.writeToSequence(camera.printGridToImage(100, Color.YELLOW).getImage());
             writer.writeToSequence(imageWriter.getImage());
-            camera.rotation(10, axis);
+            camera.rotation(360d / interval, axis);
         }
         writer.close();
     }
