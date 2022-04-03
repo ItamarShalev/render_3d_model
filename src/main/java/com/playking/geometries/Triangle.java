@@ -30,7 +30,8 @@ public class Triangle extends Polygon {
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         /* If ray doesn't intersect the plan consist in triangle return null */
-        if (plane.findIntersections(ray) == null) {
+        List<GeoPoint> planeGeoIntersectionsHelper = plane.findGeoIntersectionsHelper(ray);
+        if (planeGeoIntersectionsHelper == null) {
             return null;
         }
         List<GeoPoint> result = null;
@@ -62,7 +63,7 @@ public class Triangle extends Polygon {
                                vector.dotProduct(normal3) < 0;
 
         if (isThereIntersections) {
-            result = plane.findGeoIntersectionsHelper(ray);
+            result = List.of(new GeoPoint(this, planeGeoIntersectionsHelper.get(0).point));
         }
         return result;
     }
