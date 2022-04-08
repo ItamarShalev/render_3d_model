@@ -8,23 +8,33 @@ public class Material {
     /**
      * Diffusion coefficient.
      */
-    public double kD;
+    public Double3 kD;
     /**
      * Specular coefficient.
      */
-    public double kS;
+    public Double3 kS;
     /**
      * Specular exponent.
      */
     public int nShininess;
 
-    public Material setKD(double kD) {
+    public Material setKD(Double3 kD) {
         this.kD = kD;
         return this;
     }
 
-    public Material setKS(double kS) {
+    public Material setKD(double kD) {
+        this.kD = new Double3(kD);
+        return this;
+    }
+
+    public Material setKS(Double3 kS) {
         this.kS = kS;
+        return this;
+    }
+
+    public Material setKS(double kS) {
+        this.kS = new Double3(kS);
         return this;
     }
 

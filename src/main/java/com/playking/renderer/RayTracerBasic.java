@@ -5,6 +5,7 @@ import static com.playking.primitives.Util.alignZero;
 import com.playking.geometries.Intersect.GeoPoint;
 import com.playking.lighting.LightSource;
 import com.playking.primitives.Color;
+import com.playking.primitives.Double3;
 import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
 import com.playking.scene.Scene;
@@ -48,8 +49,8 @@ public class RayTracerBasic extends RayTracerBase {
             return Color.BLACK;
         }
         int nShininess = intersection.geometry.getMaterial().nShininess;
-        double kd = intersection.geometry.getMaterial().kD;
-        double ks = intersection.geometry.getMaterial().kS;
+        Double3 kd = intersection.geometry.getMaterial().kD;
+        Double3 ks = intersection.geometry.getMaterial().kS;
         Color color = Color.BLACK;
         for (LightSource lightSource : scene.lights) {
             Vector dirLight = lightSource.getL(intersection.point);
@@ -65,20 +66,20 @@ public class RayTracerBasic extends RayTracerBase {
         return color;
     }
 
-    private Color calcSpecular(double ks, Vector dirLight, Vector normal, Vector dir,
+    private Color calcSpecular(Double3 ks, Vector dirLight, Vector normal, Vector dir,
                                int nShininess, Color lightIntensity) {
         Vector reflectedDir = dirLight.add(normal.scale(-2 * dirLight.dotProduct(normal)));
         double t = alignZero(-reflectedDir.dotProduct(dir));
         t = alignZero(t);
-        return t > 0 ? lightIntensity.scale(ks * Math.pow(t, nShininess)) : Color.BLACK;
+        return t > 0 ? lightIntensity.scale(ks.scale(Math.pow(t, nShininess))) : Color.BLACK;
     }
 
-    private Color calcDiffusive(double kd, Vector dirLight, Vector normal, Color lightIntensity) {
+    private Color calcDiffusive(Double3 kd, Vector dirLight, Vector normal, Color lightIntensity) {
         double s = alignZero(dirLight.dotProduct(normal));
         if (s < 0) {
             s *= -1;
         }
-        return lightIntensity.scale(kd * s);
+        return lightIntensity.scale(kd.scale(s));
     }
 
     @Override
