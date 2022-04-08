@@ -63,7 +63,8 @@ public class Triangle extends Polygon {
                                vector.dotProduct(normal3) < 0;
 
         if (isThereIntersections) {
-            result = List.of(new GeoPoint(this, planeGeoIntersectionsHelper.get(0).point));
+            result = planeGeoIntersectionsHelper;
+            result.get(0).setGeometry(this);
         }
         return result;
     }

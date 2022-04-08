@@ -45,8 +45,8 @@ public abstract class Intersect {
      * GeoPoint contains the geometry and the point on the geometry.
      */
     public static class GeoPoint {
-        public final Geometry geometry;
-        public final Point point;
+        public Geometry geometry;
+        public Point point;
 
         public GeoPoint(Geometry geometry, Point point) {
             this.geometry = geometry;
@@ -57,8 +57,18 @@ public abstract class Intersect {
             return geometry;
         }
 
+        public GeoPoint setGeometry(Geometry geometry) {
+            this.geometry = geometry;
+            return this;
+        }
+
         public Point getPoint() {
             return point;
+        }
+
+        public GeoPoint setPoint(Point point) {
+            this.point = point;
+            return this;
         }
 
         @Override
