@@ -1,10 +1,12 @@
 package com.playking.geometries;
 
+import static com.playking.primitives.Util.alignZero;
 import static com.playking.primitives.Util.isZero;
 
 import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -103,6 +105,42 @@ public class Polygon extends Geometry {
 
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        return null;
+        if (this.plane.findIntersections(ray) == null) {
+            return null;
+        }
+        Vector vector = ray.getDir();
+        int numP = vertices.size();
+        List<Vector> vectors = new ArrayList<>();
+        List<GeoPoint> result = null;
+        Vector vector1;
+        boolean isPositive;
+        double sign;
+
+        for (Point vertex : vertices) {
+            vectors.add(vertex.subtract(ray.getP0()));
+        }
+
+        vector1 = vectors.get(numP - 1).crossProduct(vectors.get(0));
+        sign = alignZero(vector.dotProduct(vector1));
+        if (isZero(sign)) {
+            return null;
+        }
+        isPositive = sign > 0;
+
+        for (int i = 0; i < numP - 1; ++i) {
+            vector1 = vectors.get(i).crossProduct(vectors.get(i + 1));
+            sign = alignZero(vector.dotProduct(vector1));
+            if (isZero(sign)) {
+                return null;
+            }
+
+            if (isPositive != (sign > 0)) {
+                return null;
+            }
+        }
+        result = List.of(
+            new GeoPoint(this, plane.findGeoIntersectionsHelper(ray).get(0).point));
+
+        return result;
     }
 }

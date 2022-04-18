@@ -102,7 +102,6 @@ public class PlaneTests {
         /* TC09 variables */
         Ray rayTC09 = new Ray(new Point(2, 0, 0), new Vector(0, 1, 1));
 
-
         /* ============ Equivalence Partitions Tests ============== */
 
         /* Ray is neither orthogonal nor parallel to the plane */
