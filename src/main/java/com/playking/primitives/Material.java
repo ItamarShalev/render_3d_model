@@ -18,6 +18,12 @@ public class Material {
      */
     public int nShininess;
 
+    public Material() {
+        this.kD = new Double3(0);
+        this.kS = new Double3(0);
+        this.nShininess = 0;
+    }
+
     public Material setKD(Double3 kD) {
         this.kD = kD;
         return this;
