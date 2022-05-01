@@ -6,6 +6,7 @@ import com.playking.geometries.Intersect.GeoPoint;
 import com.playking.lighting.LightSource;
 import com.playking.primitives.Color;
 import com.playking.primitives.Double3;
+import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
 import com.playking.scene.Scene;
@@ -15,6 +16,11 @@ import java.util.List;
  * Implement RayTracerBase to handle all the ray trace.
  */
 public class RayTracerBasic extends RayTracerBase {
+
+    private static final double DELTA = 0.1;
+    private static final int MAX_CALC_COLOR_LEVEL = 10;
+    private static final double MIN_CALC_COLOR_K = 0.001;
+
     /**
      * Constructor.
      * @param scene the scene
@@ -57,10 +63,12 @@ public class RayTracerBasic extends RayTracerBase {
             double nl = alignZero(normal.dotProduct(dirLight));
             /* If the light is behind the point, ignore it. */
             if (nl * nv > 0) {
-                Color lightIntensity = lightSource.getIntensity(intersection.point);
-                color = color.add(calcDiffusive(kd, dirLight, normal, lightIntensity),
-                                  calcSpecular(ks, dirLight, normal, dir, nShininess,
-                                               lightIntensity));
+                if (unshaded(lightSource, dirLight, normal, intersection)) {
+                    Color lightIntensity = lightSource.getIntensity(intersection.point);
+                    color = color.add(calcDiffusive(kd, dirLight, normal, lightIntensity),
+                                      calcSpecular(ks, dirLight, normal, dir, nShininess,
+                                                   lightIntensity));
+                }
             }
         }
         return color;
@@ -94,5 +102,28 @@ public class RayTracerBasic extends RayTracerBase {
 
         closestPoint = ray.findClosestGeoPoint(intersectPoints);
         return calcColor(closestPoint, ray);
+    }
+
+    /**
+     * Finding Light Beam Cutting - Finding Shadow.
+     * @param light The source of light
+     * @param dirLight Direction of light
+     * @param normal The normal vector
+     * @param geopoint GeoPoint
+     * @return Whether intersections were found or not (whether there is a shadow or not)
+     */
+    private boolean unshaded(LightSource light, Vector dirLight, Vector normal, GeoPoint geopoint) {
+        Vector lightDirection = dirLight.scale(-1);
+        Vector delta = normal.scale(normal.dotProduct(lightDirection) > 0 ? DELTA : -DELTA);
+        Point point = geopoint.point.add(delta);
+        Ray lightRay = new Ray(point, lightDirection);
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay);
+        if (intersections == null) {
+            return true;
+        }
+        double lightDistance = light.getDistance(geopoint.point);
+        /* Check if the point is after the light */
+        return !(intersections.stream().allMatch(
+            geoPoint -> alignZero(geoPoint.point.distance(geoPoint.point) - lightDistance) <= 0));
     }
 }
