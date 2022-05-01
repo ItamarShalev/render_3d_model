@@ -113,6 +113,15 @@ public class Double3 {
     }
 
     /**
+     * Checks whether all the numbers are lower than a test number.
+     * @param k the test number
+     * @return true if all the numbers are less than k, false otherwise
+     */
+    public boolean lowerThan(double k) {
+        return d1 < k && d2 < k && d3 < k;
+    }
+
+    /**
      * Calculate the sum of the three doubles.
      * @return sum of the three doubles
      */
