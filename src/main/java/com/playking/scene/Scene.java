@@ -7,6 +7,7 @@ import com.playking.lighting.LightSource;
 import com.playking.primitives.Color;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * PDS class describe scene all the data about the scene.
@@ -39,16 +40,12 @@ public class Scene {
     }
 
     public Scene addGeometry(Intersect geometries) {
-        if (geometries != null) {
-            this.geometries.add(geometries);
-        }
+        Optional.ofNullable(geometries).ifPresent(this.geometries::add);
         return this;
     }
 
-    public Scene addLights(LightSource... lightSource) {
-        if (lightSource != null) {
-            lights.addAll(List.of(lightSource));
-        }
+    public Scene addLights(LightSource... lightSources) {
+        Optional.ofNullable(lightSources).map(List::of).ifPresent(lights::addAll);
         return this;
     }
 }
