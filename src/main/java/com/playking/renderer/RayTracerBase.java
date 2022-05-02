@@ -3,6 +3,7 @@ package com.playking.renderer;
 import com.playking.primitives.Color;
 import com.playking.primitives.Ray;
 import com.playking.scene.Scene;
+import java.util.Optional;
 
 /**
  * Class to handle the trace after ray.
@@ -16,10 +17,9 @@ public abstract class RayTracerBase {
      * @throws NullPointerException if scene is null
      */
     public RayTracerBase(Scene scene) throws NullPointerException {
-        if (scene == null) {
-            throw new NullPointerException("ERROR: scene can't be null");
-        }
-        this.scene = scene;
+        this.scene = Optional
+            .ofNullable(scene)
+            .orElseThrow(() -> new NullPointerException("ERROR: scene can't be null"));
     }
 
     /**
