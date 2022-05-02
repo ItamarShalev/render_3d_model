@@ -2,7 +2,10 @@ package com.playking.primitives;
 
 
 import com.playking.geometries.Intersect.GeoPoint;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Class describe ray, start with some point and has a direction.
@@ -41,9 +44,13 @@ public class Ray {
      */
     public Point findClosestPoint(List<Point> points) {
         Point closestPoint = null;
+        List<GeoPoint> geoPointList;
         if (points != null && !points.isEmpty()) {
-            closestPoint = findClosestGeoPoint(
-                points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
+            geoPointList = points
+                .stream()
+                .map(point -> new GeoPoint(null, point))
+                .collect(Collectors.toList());
+            closestPoint = findClosestGeoPoint(geoPointList).point;
         }
         return closestPoint;
     }
@@ -54,26 +61,11 @@ public class Ray {
      * @return the closest geo point to ray, if there are no points, return null
      */
     public GeoPoint findClosestGeoPoint(List<GeoPoint> points) {
-        GeoPoint closestGeoPoint = null;
-        double minDistance = 0;
-        double distance = 0;
-        if (points == null || points.isEmpty()) {
-            return null;
-        }
-
-        for (GeoPoint geoPoint : points) {
-            if (closestGeoPoint == null) {
-                closestGeoPoint = geoPoint;
-                minDistance = closestGeoPoint.point.distanceSquared(p0);
-                continue;
-            }
-            distance = geoPoint.point.distanceSquared(p0);
-            if (distance < minDistance) {
-                closestGeoPoint = geoPoint;
-                minDistance = distance;
-            }
-        }
-        return closestGeoPoint;
+        Optional<GeoPoint> optionalMinPoint;
+        optionalMinPoint = points
+            .stream()
+            .min(Comparator.comparingDouble(p -> p.point.distanceSquared(p0)));
+        return optionalMinPoint.get();
     }
 
     @Override
