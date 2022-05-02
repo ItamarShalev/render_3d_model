@@ -4,6 +4,8 @@ import com.playking.primitives.Ray;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Composite class for all geometries.
@@ -30,16 +32,13 @@ public class Geometries extends Intersect {
 
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        List<GeoPoint> result = new LinkedList<>();
+        List<GeoPoint> result = geometries
+            .stream()
+            .map(item -> item.findGeoIntersections(ray))
+            .filter(Objects::nonNull)
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
 
-        for (Intersect item : geometries) {
-            List<GeoPoint> itemIntersectionPoints = item.findGeoIntersections(ray);
-            if (itemIntersectionPoints != null) {
-                result.addAll(itemIntersectionPoints);
-            }
-        }
-        result = result.isEmpty() ? null : result;
-
-        return result;
+        return result.isEmpty() ? null : result;
     }
 }
