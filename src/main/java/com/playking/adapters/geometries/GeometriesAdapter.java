@@ -24,9 +24,7 @@ public class GeometriesAdapter implements Adapter<Geometries> {
     @Override
     public Geometries build() {
         Geometries geometries = new Geometries();
-        for (Adapter<Object> adapter : elements) {
-            geometries.add((Intersect)adapter.build());
-        }
+        elements.stream().map(adapter -> (Intersect)adapter.build()).forEach(geometries::add);
         return geometries;
     }
 }
