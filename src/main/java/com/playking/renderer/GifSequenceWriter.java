@@ -6,6 +6,10 @@ import static java.awt.image.BufferedImage.TYPE_3BYTE_BGR;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.stream.IntStream;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageTypeSpecifier;
@@ -15,6 +19,7 @@ import javax.imageio.metadata.IIOInvalidTreeException;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.FileImageOutputStream;
+import org.w3c.dom.Node;
 
 
 /**
@@ -66,15 +71,18 @@ public class GifSequenceWriter {
     }
 
     private static IIOMetadataNode getNode(IIOMetadataNode rootNode, String nodeName) {
-        int nNodes = rootNode.getLength();
-        for (int i = 0; i < nNodes; i++) {
-            if (rootNode.item(i).getNodeName().equalsIgnoreCase(nodeName)) {
-                return (IIOMetadataNode)rootNode.item(i);
-            }
+        Optional<Node> first = IntStream
+            .range(0, rootNode.getLength())
+            .mapToObj(rootNode::item)
+            .filter(node -> node.getNodeName().equalsIgnoreCase(nodeName))
+            .findFirst();
+
+        if (first.isPresent()) {
+            return (IIOMetadataNode)first.get();
         }
         IIOMetadataNode node = new IIOMetadataNode(nodeName);
         rootNode.appendChild(node);
-        return (node);
+        return node;
     }
 
     private void configureRootMetadata(int delay, boolean loop) throws IIOInvalidTreeException {
@@ -130,7 +138,7 @@ public class GifSequenceWriter {
      * @throws IOException if there isn't image with name like originPath[min...max]
      */
     public void writeToSequence(String originPath, int min, int max) throws IOException {
-        for (int i = min; i < max; i++) {
+        for (int i = min; i <= max; i++) {
             writeToSequence(originPath + i + ".png");
         }
     }
@@ -140,10 +148,11 @@ public class GifSequenceWriter {
      * @param originPath the base path, it will load as origin + min .... origin + max
      * @param min count from
      * @param max count to, include the max
+     * @throws IOException if there isn't image with name like originPath[min...max]
      */
-    public void deleteSequence(String originPath, int min, int max) {
-        for (int i = min; i < max; i++) {
-            new File(originPath + i).delete();
+    public void deleteSequence(String originPath, int min, int max) throws IOException {
+        for (int i = min; i <= max; i++) {
+            Files.delete(Paths.get(originPath + i));
         }
     }
 
