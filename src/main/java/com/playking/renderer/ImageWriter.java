@@ -18,7 +18,8 @@ import javax.imageio.ImageIO;
  * @author Dan
  */
 public class ImageWriter {
-    private static final String FOLDER_PATH = System.getProperty("user.dir") + "/images";
+    private static final String FOLDER_PATH = System.getProperty("user.dir") +
+                                              System.getProperty("file.separator") + "images";
     private final int nX;
     private final int nY;
     private final BufferedImage image;
@@ -67,7 +68,7 @@ public class ImageWriter {
      */
     public void writeToImage() throws IllegalStateException {
         try {
-            File file = new File(FOLDER_PATH + '/' + imageName + ".png");
+            File file = new File(FOLDER_PATH, imageName + ".png");
             ImageIO.write(image, "png", file);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "I/O error", e);
