@@ -27,9 +27,7 @@ public class ColorAdapter implements Adapter<Color> {
     }
 
     public static Color parseColor(String data) {
-        if (data == null) {
-            data = DEFAULT_COLOR;
-        }
+        data = data == null ? DEFAULT_COLOR : data;
         Double3 double3 = Double3Adapter.parseDouble3(data);
         return new Color(double3.d1, double3.d2, double3.d3);
     }

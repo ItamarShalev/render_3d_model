@@ -15,14 +15,19 @@ public class SpotLightAdapter implements Adapter<SpotLight> {
 
     @XmlAttribute
     private final double kc;
+
     @XmlAttribute
     private final double kl;
+
     @XmlAttribute
     private final double kq;
+
     @XmlAttribute
     private String intensity;
+
     @XmlAttribute
     private String position;
+
     @XmlAttribute
     private String direction;
 
@@ -35,8 +40,9 @@ public class SpotLightAdapter implements Adapter<SpotLight> {
     @Override
     public SpotLight build() {
         Color color = ColorAdapter.parseColor(intensity);
-        SpotLight spotLight = new SpotLight(color, PointAdapter.parsePoint(position),
-                                            new Vector(Double3Adapter.parseDouble3(direction)));
+        SpotLight spotLight = new SpotLight(color,
+            PointAdapter.parsePoint(position),
+            new Vector(Double3Adapter.parseDouble3(direction)));
         spotLight.setKC(kc).setKL(kl).setKQ(kq);
         return spotLight;
     }

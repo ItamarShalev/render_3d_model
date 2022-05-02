@@ -6,7 +6,6 @@ import static com.playking.primitives.Util.isZero;
 import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -74,15 +73,13 @@ public class Plane extends Geometry {
         double numerator, denominator, t;
         boolean isThereNoIntersections;
 
-
         p0DistanceQ0 = p0.subtract(ray.getP0());
         numerator = alignZero(normal.dotProduct(p0DistanceQ0));
         denominator = alignZero(normal.dotProduct(vector));
         t = alignZero(numerator / denominator);
         isThereNoIntersections = isZero(numerator) || isZero(denominator) || t <= 0;
         if (!isThereNoIntersections) {
-            result = new LinkedList<>();
-            result.add(new GeoPoint(this, ray.getP0(t)));
+            result = List.of(new GeoPoint(this, ray.getP0(t)));
         }
 
         return result;

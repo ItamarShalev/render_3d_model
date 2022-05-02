@@ -2,19 +2,19 @@ package com.playking.primitives;
 
 import com.playking.adapters.scene.SceneAdapter;
 import com.playking.scene.Scene;
-import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 public class XmlHelper {
 
-    private static final String FOLDER_PATH = System.getProperty("user.dir") +
-                                              "/src/test/resources/";
+    private static final String FOLDER_PATH = Paths.get(System.getProperty("user.dir"), "src",
+                                                        "test", "resources").toString();
 
     /**
      * The function will return scene object from fileName.
@@ -23,33 +23,25 @@ public class XmlHelper {
      * @throws NullPointerException if file name is
      * @throws IllegalArgumentException if fileName is empty
      * @throws IOException if the file isn't exist
+     * @throws JAXBException if there was any error during unmarshalling
      */
     public static Scene readSceneObjectFromXml(String fileName)
-        throws NullPointerException, IllegalArgumentException, IOException {
+        throws NullPointerException, IllegalArgumentException, IOException, JAXBException {
         if (fileName == null) {
             throw new NullPointerException("ERROR: File name can't be null");
         }
         if (fileName.isEmpty()) {
             throw new IllegalArgumentException("ERROR: File name can't be empty");
         }
-        String path = FOLDER_PATH + fileName;
-        File file = new File(path);
-        if (!file.exists()) {
+        Path path = Paths.get(FOLDER_PATH, fileName);
+        if (!Files.exists(path)) {
             throw new IOException("ERROR: File doesn't exist");
         }
-        JAXBContext jaxbContext;
-        try {
-            jaxbContext = JAXBContext.newInstance(SceneAdapter.class);
+        JAXBContext jaxbContext = JAXBContext.newInstance(SceneAdapter.class);
+        Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+        StringReader stringReader = new StringReader(Files.readString(path));
+        SceneAdapter sceneAdapter = (SceneAdapter)jaxbUnmarshaller.unmarshal(stringReader);
 
-            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-
-            SceneAdapter sceneAdapter = (SceneAdapter)jaxbUnmarshaller.unmarshal(
-                new StringReader(Files.readString(Path.of(path))));
-
-            return sceneAdapter.build();
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return sceneAdapter.build();
     }
 }

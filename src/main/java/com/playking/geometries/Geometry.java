@@ -6,7 +6,7 @@ import com.playking.primitives.Point;
 import com.playking.primitives.Vector;
 
 /**
- * Interface for Geometry.
+ * Abstract class for Geometry.
  */
 public abstract class Geometry extends Intersect {
 
@@ -18,7 +18,7 @@ public abstract class Geometry extends Intersect {
      */
     public Geometry() {
         this.emission = Color.BLACK;
-        material = new Material();
+        this.material = new Material();
     }
 
     public Color getEmission() {

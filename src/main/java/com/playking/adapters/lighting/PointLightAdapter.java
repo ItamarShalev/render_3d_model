@@ -14,12 +14,16 @@ public class PointLightAdapter implements Adapter<PointLight> {
 
     @XmlAttribute
     private final double kc;
+
     @XmlAttribute
     private final double kl;
+
     @XmlAttribute
     private final double kq;
+
     @XmlAttribute
     private String intensity;
+
     @XmlAttribute
     private String position;
 

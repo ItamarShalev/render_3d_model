@@ -4,7 +4,6 @@ package com.playking.primitives;
 import com.playking.geometries.Intersect.GeoPoint;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -46,10 +45,9 @@ public class Ray {
         Point closestPoint = null;
         List<GeoPoint> geoPointList;
         if (points != null && !points.isEmpty()) {
-            geoPointList = points
-                .stream()
-                .map(point -> new GeoPoint(null, point))
-                .collect(Collectors.toList());
+            geoPointList = points.stream()
+                                 .map(point -> new GeoPoint(null, point))
+                                 .collect(Collectors.toList());
             closestPoint = findClosestGeoPoint(geoPointList).point;
         }
         return closestPoint;
@@ -61,11 +59,9 @@ public class Ray {
      * @return the closest geo point to ray, if there are no points, return null
      */
     public GeoPoint findClosestGeoPoint(List<GeoPoint> points) {
-        Optional<GeoPoint> optionalMinPoint;
-        optionalMinPoint = points
-            .stream()
-            .min(Comparator.comparingDouble(p -> p.point.distanceSquared(p0)));
-        return optionalMinPoint.get();
+        return points.stream()
+                     .min(Comparator.comparingDouble(p -> p.point.distanceSquared(p0)))
+                     .get();
     }
 
     @Override

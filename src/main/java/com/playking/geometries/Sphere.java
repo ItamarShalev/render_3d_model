@@ -65,8 +65,6 @@ public class Sphere extends Geometry {
             }
         }
 
-        result = result.isEmpty() ? null : result;
-
-        return result;
+        return result.isEmpty() ? null : result;
     }
 }

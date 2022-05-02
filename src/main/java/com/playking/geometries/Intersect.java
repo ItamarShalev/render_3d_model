@@ -3,9 +3,10 @@ package com.playking.geometries;
 import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * Interface of intersection of light rays with objects.
+ * Abstract class of intersection of light rays with objects.
  */
 public abstract class Intersect {
 
@@ -18,8 +19,7 @@ public abstract class Intersect {
         List<GeoPoint> geoList = findGeoIntersections(ray);
         List<Point> result = null;
         if (geoList != null) {
-            result = geoList.stream().map(GeoPoint::getPoint)
-                            .collect(java.util.stream.Collectors.toList());
+            result = geoList.stream().map(GeoPoint::getPoint).collect(Collectors.toList());
         }
         return result;
     }
