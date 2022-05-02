@@ -2,8 +2,8 @@ package com.playking.adapters.lighting;
 
 import com.playking.adapters.Adapter;
 import com.playking.lighting.LightSource;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -20,10 +20,9 @@ public class LightsAdapter implements Adapter<List<LightSource>> {
 
     @Override
     public List<LightSource> build() {
-        List<LightSource> lightSourceList = new LinkedList<>();
-        for (Adapter<Object> adapter : lights) {
-            lightSourceList.add((LightSource)adapter.build());
-        }
-        return lightSourceList;
+        return lights
+            .stream()
+            .map(adapter -> (LightSource)adapter.build())
+            .collect(Collectors.toList());
     }
 }
