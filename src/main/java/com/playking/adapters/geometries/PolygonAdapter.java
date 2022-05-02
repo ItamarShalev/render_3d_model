@@ -5,7 +5,6 @@ import com.playking.adapters.primitives.ColorAdapter;
 import com.playking.adapters.primitives.PointAdapter;
 import com.playking.geometries.Polygon;
 import com.playking.primitives.Point;
-import java.util.LinkedList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
@@ -24,12 +23,8 @@ public class PolygonAdapter implements Adapter<Polygon> {
 
     @Override
     public Polygon build() {
-        List<Point> pointList = new LinkedList<>();
-        Point[] pointsArray = new Point[points.size()];
-        for (PointAdapter point : points) {
-            pointList.add(point.build());
-        }
-        pointList.toArray(pointsArray);
+        Point[] pointsArray;
+        pointsArray = points.stream().map(PointAdapter::build).toArray(Point[]::new);
         return (Polygon)new Polygon(pointsArray).setEmission(ColorAdapter.parseColor(color));
     }
 }
