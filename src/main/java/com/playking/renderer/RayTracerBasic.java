@@ -11,6 +11,7 @@ import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
 import com.playking.scene.Scene;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * Implement RayTracerBase to handle all the ray trace.
@@ -37,8 +38,10 @@ public class RayTracerBasic extends RayTracerBase {
      * @return the color of the point
      */
     private Color calcColor(GeoPoint intersection, Ray ray) {
-        return scene.ambientLight.getIntensity().add(intersection.geometry.getEmission())
-                                 .add(calcLocalEffects(intersection, ray));
+        return scene.ambientLight
+            .getIntensity()
+            .add(intersection.geometry.getEmission())
+            .add(calcLocalEffects(intersection, ray));
     }
 
     /**
@@ -122,8 +125,9 @@ public class RayTracerBasic extends RayTracerBase {
             return true;
         }
         double lightDistance = light.getDistance(geopoint.point);
+        Function<GeoPoint, Boolean> isAfterTheLight = geoPoint -> alignZero(
+            geoPoint.point.distance(geoPoint.point) - lightDistance) <= 0;
         /* Check if the point is after the light */
-        return !(intersections.stream().allMatch(
-            geoPoint -> alignZero(geoPoint.point.distance(geoPoint.point) - lightDistance) <= 0));
+        return intersections.stream().noneMatch(isAfterTheLight::apply);
     }
 }
