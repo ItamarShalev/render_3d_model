@@ -12,8 +12,8 @@ import com.playking.primitives.Vector;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.MissingResourceException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 public class Camera {
     private static final double ERROR_VALUE_DOUBLE = -1d;
@@ -269,44 +269,26 @@ public class Camera {
      * @return list of all the points that intersect, if there is no intersect point return null
      */
     public List<Point> findIntersections(int nX, int nY, Intersect intersect) {
-        Ray ray;
         List<Point> result = new LinkedList<>();
-        List<Point> intersectionPoints;
-
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                ray = constructRay(nX, nY, i, j);
-                intersectionPoints = intersect.findIntersections(ray);
-                if (intersectionPoints != null) {
-                    result.addAll(intersectionPoints);
-                }
-            }
-        }
+        IntStream.range(0, (int)width).forEach(row -> {
+            IntStream.range(0, (int)height).forEach(column -> {
+                Ray ray = constructRay(nX, nY, row, column);
+                var optionalPoints = Optional.ofNullable(intersect.findIntersections(ray));
+                optionalPoints.ifPresent(result::addAll);
+            });
+        });
         return result.isEmpty() ? null : result;
     }
 
     public Camera renderImage() throws MissingResourceException {
         checkAndThrowIfMissingResources();
-        ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
-
-        for (int row = 0; row < imageWriter.getNx(); row++) {
-            int finalRow = row;
-            Runnable runnable = () -> {
-                Ray ray;
-                Color color;
-                int nY = imageWriter.getNy();
-                for (int j = 0; j < nY; j++) {
-                    ray = constructRay(imageWriter.getNx(), nY, finalRow, j);
-                    color = rayTracer.traceRay(ray);
-                    imageWriter.writePixel(finalRow, j, color);
-                }
-            };
-            executor.execute(runnable);
-        }
-        executor.shutdown();
-        while (!executor.isTerminated()) {
-            continue;
-        }
+        IntStream.range(0, imageWriter.getNx()).parallel().forEach(row -> {
+            IntStream.range(0, imageWriter.getNy()).parallel().forEach(column -> {
+                Ray ray = constructRay(imageWriter.getNx(), imageWriter.getNy(), row, column);
+                Color color = rayTracer.traceRay(ray);
+                imageWriter.writePixel(row, column, color);
+            });
+        });
         return this;
     }
 
@@ -329,15 +311,14 @@ public class Camera {
      */
     public ImageWriter printGridToImage(int interval, Color color) throws MissingResourceException {
         checkAndThrowIfMissingResources();
-        boolean isOnTheLine = true;
-        for (int i = 0; i < imageWriter.getNx(); i++) {
-            for (int j = 0; j < imageWriter.getNy(); j++) {
-                isOnTheLine = i % interval == 0 || j % interval == 0;
-                if (isOnTheLine) {
-                    imageWriter.writePixel(i, j, color);
-                }
-            }
-        }
+        IntStream.range(0, imageWriter.getNx()).parallel().forEach(row -> {
+            IntStream
+                .range(0, imageWriter.getNy())
+                .parallel()
+                /* Filter only the pixels on the line */
+                .filter(column -> row % interval == 0 || column % interval == 0)
+                .forEach(column -> imageWriter.writePixel(row, column, color));
+        });
         return imageWriter;
     }
 
