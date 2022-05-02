@@ -1,13 +1,14 @@
 package com.playking.geometries;
 
 import static com.playking.primitives.Util.alignZero;
+import static com.playking.primitives.Util.checkSign;
 import static com.playking.primitives.Util.isZero;
 
 import com.playking.primitives.Point;
 import com.playking.primitives.Ray;
 import com.playking.primitives.Vector;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
@@ -105,41 +106,38 @@ public class Polygon extends Geometry {
 
     @Override
     public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        if (this.plane.findIntersections(ray) == null) {
+        List<GeoPoint> result = plane.findGeoIntersectionsHelper(ray);
+        if (result == null) {
             return null;
         }
-        Vector vector = ray.getDir();
-        int numP = vertices.size();
-        List<Vector> vectors = new ArrayList<>();
-        List<GeoPoint> result = null;
-        Vector vector1;
-        boolean isPositive;
-        double sign;
+        int next;
+        int numPoints = vertices.size();
+        double lastVectorsSign = 0d;
+        double currentSign;
+        boolean isLastWithTheFirst;
+        boolean isOutsideThePolygon = false;
+        Vector vector;
+        List<Vector> vectors;
 
-        for (Point vertex : vertices) {
-            vectors.add(vertex.subtract(ray.getP0()));
+        vectors = vertices
+            .stream()
+            .map(vertex -> vertex.subtract(ray.getP0()))
+            .collect(Collectors.toList());
+
+        for (int i = 0; i < numPoints && !isOutsideThePolygon; ++i) {
+            next = (i + 1) % numPoints;
+            isLastWithTheFirst = i == numPoints - 1;
+            vector = vectors.get(i).crossProduct(vectors.get(next));
+            currentSign = alignZero(ray.getDir().dotProduct(vector));
+            isOutsideThePolygon = isZero(currentSign) ||
+                                  isLastWithTheFirst && !checkSign(lastVectorsSign, currentSign);
+            lastVectorsSign = currentSign;
         }
-
-        vector1 = vectors.get(numP - 1).crossProduct(vectors.get(0));
-        sign = alignZero(vector.dotProduct(vector1));
-        if (isZero(sign)) {
-            return null;
+        if (isOutsideThePolygon) {
+            result = null;
+        } else {
+            result.forEach(geoPoint -> geoPoint.setGeometry(this));
         }
-        isPositive = sign > 0;
-
-        for (int i = 0; i < numP - 1; ++i) {
-            vector1 = vectors.get(i).crossProduct(vectors.get(i + 1));
-            sign = alignZero(vector.dotProduct(vector1));
-            if (isZero(sign)) {
-                return null;
-            }
-
-            if (isPositive != (sign > 0)) {
-                return null;
-            }
-        }
-        result = List.of(
-            new GeoPoint(this, plane.findGeoIntersectionsHelper(ray).get(0).point));
 
         return result;
     }
