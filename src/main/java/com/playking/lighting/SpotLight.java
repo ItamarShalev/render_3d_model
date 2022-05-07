@@ -8,6 +8,7 @@ import com.playking.primitives.Vector;
 
 public class SpotLight extends PointLight {
     private final Vector direction;
+    private int narrowBeam;
 
     /**
      * Constructor for SpotLight class.
@@ -18,12 +19,28 @@ public class SpotLight extends PointLight {
     public SpotLight(Color intensity, Point position, Vector direction) {
         super(intensity, position);
         this.direction = direction.normalize();
+        narrowBeam = 1;
     }
 
     @Override
     public Color getIntensity(Point point) {
-        double projection = direction.dotProduct(getL(point));
-        return alignZero(projection) < 0 ? Color.BLACK
-                                         : super.getIntensity(point).scale(projection);
+        double projection = alignZero(direction.dotProduct(getL(point)));
+        Color result = Color.BLACK;
+        if (projection > 0) {
+            projection = narrowBeam != 1 ? Math.pow(projection, narrowBeam) : projection;
+            result = super.getIntensity(point).scale(projection);
+        }
+        return result;
+    }
+
+    /**
+     * Sets the narrow beam of the light.
+     * As much as the narrow beam is bigger, the light will be more focused.
+     * @param narrowBeam The narrow beam of the light.
+     * @return The light.
+     */
+    public SpotLight setNarrowBeam(int narrowBeam) {
+        this.narrowBeam = narrowBeam;
+        return this;
     }
 }
