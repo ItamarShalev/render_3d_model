@@ -1,6 +1,9 @@
 package com.playking.primitives;
 
 
+import static com.playking.primitives.Util.alignZero;
+import static com.playking.primitives.Util.isZero;
+
 import com.playking.geometries.Intersect.GeoPoint;
 import java.util.Comparator;
 import java.util.List;
@@ -11,6 +14,7 @@ import java.util.stream.Collectors;
  */
 public class Ray {
 
+    private static final double DELTA = 0.1;
     private final Point p0;
     private final Vector dir;
 
@@ -22,6 +26,26 @@ public class Ray {
     public Ray(Point p0, Vector dir) {
         this.p0 = p0;
         this.dir = dir.normalize();
+    }
+
+    /**
+     * Creates a new ray by point,vector direction and normal.
+     * @param p0 head point of the ray
+     * @param dir direction of the ray
+     * @param normal normal of the ray
+     */
+    public Ray(Point p0, Vector dir, Vector normal) {
+        this.dir = dir;
+        /* make sure the normal and the direction are not orthogonal */
+        double nv = alignZero(normal.dotProduct(dir));
+        /* if not orthogonal */
+        if (!isZero(nv)) {
+            Vector moveVector = normal.scale(nv > 0 ? DELTA : -DELTA);
+            /* move the head of the vector in the right direction */
+            this.p0 = p0.add(moveVector);
+        } else {
+            this.p0 = p0;
+        }
     }
 
     public Point getP0() {
