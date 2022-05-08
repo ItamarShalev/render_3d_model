@@ -14,13 +14,23 @@ public class Material {
      */
     public Double3 kS;
     /**
+     * Promotes transparency.
+     */
+    public Double3 kT;
+    /**
+     * Coefficient of reflection.
+     */
+    public Double3 kR;
+    /**
      * Specular exponent.
      */
     public int nShininess;
 
     public Material() {
-        this.kD = new Double3(0);
-        this.kS = new Double3(0);
+        this.kD = Double3.ZERO;
+        this.kS = Double3.ZERO;
+        this.kT = Double3.ZERO;
+        this.kR = Double3.ZERO;
         this.nShininess = 0;
     }
 
@@ -41,6 +51,26 @@ public class Material {
 
     public Material setKS(double kS) {
         this.kS = new Double3(kS);
+        return this;
+    }
+
+    public Material setKT(Double3 kT) {
+        this.kT = kT;
+        return this;
+    }
+
+    public Material setKT(double kT) {
+        this.kT = new Double3(kT);
+        return this;
+    }
+
+    public Material setKR(Double3 kR) {
+        this.kR = kR;
+        return this;
+    }
+
+    public Material setKR(double kR) {
+        this.kR = new Double3(kR);
         return this;
     }
 
