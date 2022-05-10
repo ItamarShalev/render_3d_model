@@ -72,13 +72,12 @@ public class Cylinder extends Tube {
     }
 
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-
-        Point p0 = axisRay.getP0();
-        Point p1 = axisRay.getP0(height);
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
+        Point point1 = axisRay.getP0();
+        Point point2 = axisRay.getP0(height);
         List<GeoPoint> result = null;
         /* Find the tube's intersections */
-        List<GeoPoint> tubePoints = super.findGeoIntersectionsHelper(ray);
+        List<GeoPoint> tubePoints = super.findGeoIntersectionsHelper(ray, maxDistance);
         GeoPoint geoPoint1;
         GeoPoint geoPoint2;
         boolean q0Intersects;
@@ -115,15 +114,14 @@ public class Cylinder extends Tube {
             }
         }
         /* Finds the bottom cap's intersections */
-        List<GeoPoint> cap0Point = bottomCap.findGeoIntersectionsHelper(ray);
+        List<GeoPoint> cap0Point = bottomCap.findGeoIntersectionsHelper(ray, maxDistance);
         if (cap0Point != null) {
             // Checks if the intersection point is on the cap */
             geoPoint1 = cap0Point.get(0);
-            if (geoPoint1.point.distanceSquared(p0) < radius * radius) {
+            if (geoPoint1.point.distanceSquared(point1) < radius * radius) {
                 if (result == null) {
                     result = new LinkedList<>();
                 }
-
                 result.add(geoPoint1);
                 if (result.size() == 2) {
                     return result;
@@ -131,11 +129,11 @@ public class Cylinder extends Tube {
             }
         }
         /* Finds the top cap's intersections */
-        List<GeoPoint> cap1Point = topCap.findGeoIntersectionsHelper(ray);
+        List<GeoPoint> cap1Point = topCap.findGeoIntersectionsHelper(ray, maxDistance);
         if (cap1Point != null) {
             /* Checks if the intersection point is on the cap */
             geoPoint1 = cap1Point.get(0);
-            if (geoPoint1.point.distanceSquared(p1) < radius * radius) {
+            if (geoPoint1.point.distanceSquared(point2) < radius * radius) {
                 if (result == null) {
                     return List.of(geoPoint1);
                 }
@@ -153,13 +151,15 @@ public class Cylinder extends Tube {
      * @return True if it is between the caps. Otherwise, false.
      */
     private boolean isBetweenCaps(Point p) {
-        Vector v0 = axisRay.getDir();
-        Point p0 = axisRay.getP0();
-        Point p1 = axisRay.getP0(height);
+        Vector vector = axisRay.getDir();
+        Point point1 = axisRay.getP0();
+        Point point2 = axisRay.getP0(height);
         /* Checks against zero vector... */
-        if (p.equals(p0) || p.equals(p1)) {
+        if (p.equals(point1) || p.equals(point2)) {
             return false;
         }
-        return v0.dotProduct(p.subtract(p0)) > 0 && v0.dotProduct(p.subtract(p1)) < 0;
+        return vector.dotProduct(p.subtract(point1)) > 0
+               && vector.dotProduct(p.subtract(point2)) < 0;
     }
 }
+

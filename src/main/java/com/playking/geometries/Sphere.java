@@ -35,36 +35,60 @@ public class Sphere extends Geometry {
     }
 
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        /* In case that p0 is same as center */
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
+        /* In case that point is same as center */
         if (ray.getP0().equals(center)) {
             return List.of(new GeoPoint(this, center.add(ray.getDir().scale(radius))));
         }
         List<GeoPoint> result = new LinkedList<>();
-        double tm, d, th, t1, t2;
-        Point p0 = ray.getP0();
+        double vectDPSubV, d, th, t1, t2;
+        Point point = ray.getP0();
         Vector vector = ray.getDir();
-        Vector u;
+        Vector subV;
 
-        u = center.subtract(ray.getP0());
-        tm = alignZero(vector.dotProduct(u));
-        d = alignZero(Math.sqrt(alignZero(u.lengthSquared() - tm * tm)));
+        subV = center.subtract(point);
+        vectDPSubV = alignZero(vector.dotProduct(subV));
+        d = alignZero(Math.sqrt(alignZero(subV.lengthSquared() - vectDPSubV * vectDPSubV)));
         th = alignZero(Math.sqrt(alignZero(radius * radius - d * d)));
-        t1 = alignZero(tm - th);
-        t2 = alignZero(tm + th);
-
-        /* Check if the ray direction is above the sphere */
-        if (d < radius) {
-            if (t1 > 0) {
-                Point p1 = p0.add(vector.scale(t1));
-                result.add(new GeoPoint(this, p1));
-            }
-            if (t2 > 0) {
-                Point p2 = p0.add(vector.scale(t2));
-                result.add(new GeoPoint(this, p2));
+        t1 = alignZero(vectDPSubV - th);
+        t2 = alignZero(vectDPSubV + th);
+        if (d >= radius) {
+            return null;
+        }
+        Point point1;
+        Point point2;
+        double distance1;
+        double distance2;
+        if (t1 > 0 && t2 > 0) {
+            point1 = point.add(vector.scale(t1));
+            point2 = point.add(vector.scale(t2));
+            distance1 = point1.distance(point);
+            distance2 = point2.distance(point);
+            if (distance1 <= maxDistance && distance2 <= maxDistance) {
+                return List.of(new GeoPoint(this, point1),
+                               new GeoPoint(this, point2));
+            } else if (distance1 <= maxDistance) {
+                return List.of(new GeoPoint(this, point1));
+            } else if (distance2 <= maxDistance) {
+                return List.of(new GeoPoint(this, point2));
+            } else {
+                return null;
             }
         }
-
-        return result.isEmpty() ? null : result;
+        if (t1 > 0) {
+            point1 = point.add(vector.scale(t1));
+            distance1 = point1.distance(ray.getP0());
+            if (distance1 <= maxDistance) {
+                return List.of(new GeoPoint(this, point1));
+            }
+        }
+        if (t2 > 0) {
+            point2 = point.add(vector.scale(t2));
+            distance2 = point2.distance(ray.getP0());
+            if (distance2 <= maxDistance) {
+                return List.of(new GeoPoint(this, point2));
+            }
+        }
+        return null;
     }
 }

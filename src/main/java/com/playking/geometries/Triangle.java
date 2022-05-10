@@ -28,9 +28,9 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         /* If ray doesn't intersect the plan consist in triangle return null */
-        List<GeoPoint> result = plane.findGeoIntersectionsHelper(ray);
+        List<GeoPoint> result = plane.findGeoIntersectionsHelper(ray, maxDistance);
         if (result == null) {
             return null;
         }
@@ -57,9 +57,9 @@ public class Triangle extends Polygon {
         isThereIntersections = vector.dotProduct(normal1) > 0 && vector.dotProduct(normal2) > 0 &&
                                vector.dotProduct(normal3) > 0;
 
-        isThereIntersections = isThereIntersections ||
-                               vector.dotProduct(normal1) < 0 && vector.dotProduct(normal2) < 0 &&
-                               vector.dotProduct(normal3) < 0;
+        isThereIntersections = isThereIntersections || vector.dotProduct(normal1) < 0 &&
+                                                       vector.dotProduct(normal2) < 0 &&
+                                                       vector.dotProduct(normal3) < 0;
 
         if (isThereIntersections) {
             result.forEach(geoPoint -> geoPoint.setGeometry(this));

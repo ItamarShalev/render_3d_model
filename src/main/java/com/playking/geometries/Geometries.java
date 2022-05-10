@@ -31,14 +31,14 @@ public class Geometries extends Intersect {
     }
 
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
         List<GeoPoint> result = geometries
             .stream()
-            .map(item -> item.findGeoIntersections(ray))
+            .map(item -> item.findGeoIntersectionsHelper(ray, maxDistance))
             .filter(Objects::nonNull)
             .flatMap(List::stream)
+            .filter(geoPoint -> ray.getP0().distance(geoPoint.point) <= maxDistance)
             .collect(Collectors.toList());
-
         return result.isEmpty() ? null : result;
     }
 }

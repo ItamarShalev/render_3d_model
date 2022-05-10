@@ -27,9 +27,10 @@ public abstract class Intersect {
     /**
      * Find all GeoPoints from the ray.
      * @param ray MUST be not null, The ray tested at the intersection of the object
+     * @param maxDistance max distance of the intersection
      * @return List of GeoPoints that intersection with the object
      */
-    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray);
+    protected abstract List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance);
 
     /**
      * Find the nearest intersection point from the ray.
@@ -37,7 +38,7 @@ public abstract class Intersect {
      * @return The nearest point that intersection with the object
      */
     public List<GeoPoint> findGeoIntersections(Ray ray) {
-        return findGeoIntersectionsHelper(ray);
+        return findGeoIntersectionsHelper(ray, Double.POSITIVE_INFINITY);
     }
 
 
