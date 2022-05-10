@@ -1,6 +1,5 @@
 package com.playking.geometries;
 
-import static com.playking.primitives.Util.alignZero;
 import static com.playking.primitives.Util.isZero;
 
 import com.playking.primitives.Point;
@@ -63,25 +62,41 @@ public class Plane extends Geometry {
      * @return List of points all the intersections, if there is no intersections return null
      */
     @Override
-    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
-        if (p0.equals(ray.getP0())) {
+    public List<GeoPoint> findGeoIntersectionsHelper(Ray ray, double maxDistance) {
+
+        /* t=n*(q0-Po)/n*dir */
+        Vector dir = ray.getDir();
+        Point p0 = ray.getP0();
+
+        /* Ray on the plane */
+        if (this.p0.equals(p0)) {
             return null;
         }
-        List<GeoPoint> result = null;
-        Vector p0DistanceQ0;
-        Vector vector = ray.getDir();
-        double numerator, denominator, t;
-        boolean isThereNoIntersections;
 
-        p0DistanceQ0 = p0.subtract(ray.getP0());
-        numerator = alignZero(normal.dotProduct(p0DistanceQ0));
-        denominator = alignZero(normal.dotProduct(vector));
-        t = alignZero(numerator / denominator);
-        isThereNoIntersections = isZero(numerator) || isZero(denominator) || t <= 0;
-        if (!isThereNoIntersections) {
-            result = List.of(new GeoPoint(this, ray.getP0(t)));
+        double nqp = normal.dotProduct(this.p0.subtract(p0));
+        /* Ray on the plane */
+        if (isZero(nqp)) {
+            return null;
         }
 
-        return result;
+        double nv = normal.dotProduct(dir);
+        if (isZero(nv)) {
+            return null;
+        }
+
+        double t = nqp / nv;
+        /* Ray after the plane */
+        if (t < 0) {
+            return null;
+        }
+
+        p0 = ray.getP0(t);
+        /* Ray crosses the plane */
+        if (p0 != null) {
+            if (p0.distance(ray.getP0()) <= maxDistance) {
+                return List.of(new GeoPoint(this, p0));
+            }
+        }
+        return null;
     }
 }

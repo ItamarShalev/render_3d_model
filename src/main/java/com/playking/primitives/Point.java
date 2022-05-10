@@ -27,6 +27,10 @@ public class Point {
         this.xyz = xyz;
     }
 
+    public Point(Point point) {
+        this.xyz = point.xyz;
+    }
+
     /**
      * Subtract point from the current point.
      * @param point the start point from to current point
