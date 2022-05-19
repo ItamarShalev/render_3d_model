@@ -130,7 +130,7 @@ public class PolygonTests {
         assertEquals(point, result.get(0), "ERROR: Ray doesn't intersect the polygon");
 
         /* TC02:Ray outside against vertex */
-        ray = new Ray(new Point(0, -2, 0), new Vector(0, 0, 4));
+        ray = new Ray(new Point(-2, 0, 0), new Vector(0, 0, 4));
 
         assertNull(polygon.findIntersections(ray), "ERROR: Ray isn't outside against vertex");
 
@@ -144,8 +144,8 @@ public class PolygonTests {
 
         assertNull(polygon.findIntersections(ray), "ERROR: Ray  isn't inside the polygon");
 
-        /* ============ Boundary Values Tests ============= */
-        //TC11: Ray On edge
+        // ============ Boundary Values Tests =============
+        /* TC11: Ray On edge */
         ray = new Ray(new Point(-2, 0, 3), new Vector(1.03d, 0.51d, -3));
         result = polygon.findIntersections(ray);
         point = new Point(-0.97d, 0.51d, 0d);

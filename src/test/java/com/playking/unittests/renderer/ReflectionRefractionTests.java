@@ -122,16 +122,13 @@ public class ReflectionRefractionTests {
 
         scene.geometries.add(new Triangle(new Point(-150, -150, -115),
                                           new Point(150, -150, -135),
-                                          new Point(75, 75, -150)).setMaterial(new Material()
-                                                                                   .setKD(0.5)
-                                                                                   .setKS(0.5)
-                                                                                   .setShininess(60)),
+                                          new Point(75, 75, -150))
+                                 .setMaterial(new Material().setKD(0.5).setKS(0.5).setShininess(60)
+                                             ),
                              new Triangle(new Point(-150, -150, -115),
                                           new Point(-70, 70, -140),
-                                          new Point(75, 75, -150)).setMaterial(new Material()
-                                                                                   .setKD(0.5)
-                                                                                   .setKS(0.5)
-                                                                                   .setShininess(60)),
+                                          new Point(75, 75, -150)).setMaterial(
+                                 new Material().setKD(0.5).setKS(0.5).setShininess(60)),
                              new Sphere(new Point(60, 50, -50), 30d)
                                  .setEmission(new Color(BLUE))
                                  .setMaterial(new Material()

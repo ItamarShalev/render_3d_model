@@ -117,15 +117,14 @@ public class PlaneTests {
 
         /* =============== Boundary Values Tests ================== */
 
-        /* **** Group: Ray is parallel to the plane */
-
+        /* Group: Ray is parallel to the plane */
         /* TC03: the ray included in the plane (0 points) */
         assertNull(planeTC01.findIntersections(rayTC03), "ERROR: Ray included in plane");
 
         /* TC04: the ray is not included in the plane (0 points) */
         assertNull(planeTC01.findIntersections(rayTC04), "ERROR: Ray parallel with plane");
 
-        /* **** Group: Ray is orthogonal to the plane */
+        /* Group: Ray is orthogonal to the plane */
         /* TC05: – according to p0 (before) (1 point) */
         result = planeTC01.findIntersections(rayTC05);
 
