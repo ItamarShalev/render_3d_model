@@ -92,7 +92,7 @@ public class TubeTests {
         /* TC17: Ray is inside the tube and starts at axis head */
         ray = new Ray(new Point(1, 1, 1), vAxis);
         assertNull(tube2.findIntersections(ray), "must not be intersections");
-        /* **** Group: Ray is orthogonal but does not begin against the axis head */
+        /*--- Group: Ray is orthogonal but does not begin against the axis head --- */
         /* TC21: Ray starts outside and the line is outside (0 points) */
         ray = new Ray(new Point(0, 2, 2), new Vector(1, 1, 0));
         assertNull(tube2.findIntersections(ray), "must not be intersections");
@@ -172,7 +172,7 @@ public class TubeTests {
         assertNotNull(result, "must be intersections");
         assertEquals(1, result.size(), "must be 1 intersections");
         assertEquals(List.of(new Point(1, 2, 2)), result, "Bad intersections");
-        /* **** Group: Ray is orthogonal to axis and begins against the axis head */
+        /*--- Group: Ray is orthogonal to axis and begins against the axis head--- */
         /* TC41: Ray starts outside and the line is outside  */
         ray = new Ray(new Point(0, 2, 1), new Vector(1, 1, 0));
         assertNull(tube2.findIntersections(ray), "must not be intersections");
