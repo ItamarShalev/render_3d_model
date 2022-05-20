@@ -62,7 +62,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <build>
-        <testSourceDirectory>src/test/java/com/playking/unittests</testSourceDirectory>
+        <testSourceDirectory>src/test/java/com/unittests</testSourceDirectory>
         <pluginManagement>
             <plugins>
                 <plugin>
