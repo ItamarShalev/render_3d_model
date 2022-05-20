@@ -26,6 +26,109 @@ public class MiniProjectTests {
      */
     @Test
     public void testMiniProject1() {
+        Material materialDefault = new Material().setKD(0.5).setKS(0.5).setShininess(30);
+        Color cubeColor = new Color(250, 0, 220);
+
+        Scene scene = new Scene("Test scene");
+        Camera camera = new Camera(new Point(0, 0, -1000),
+                                   new Vector(0, 0, 1),
+                                   new Vector(0, -1, 0))
+            .setSize(200, 200)
+            .setDistance(1000)
+            .setRayTracer(new RayTracerBasic(scene));
+
+        scene.geometries.add(new Sphere(new Point(0, 0, 0), 10)
+                                 .setEmission(new Color(255, 0, 0))
+                                 .setMaterial(new Material()
+                                                  .setKD(0.5)
+                                                  .setKS(0.5)
+                                                  .setShininess(30)
+                                                  .setKT(0.7)
+                                                  .setKR(0)),
+                             new Sphere(new Point(-20, -5, 20), 15)
+                                 .setEmission(Color.BLACK)
+                                 .setMaterial(materialDefault),
+                             new Sphere(new Point(-30, -10, 60), 20)
+                                 .setEmission(new Color(java.awt.Color.GREEN))
+                                 .setMaterial(materialDefault),
+                             new Sphere(new Point(15, -20, 70), 30)
+                                 .setEmission(new Color(java.awt.Color.blue))
+                                 .setMaterial(new Material()
+                                                  .setKD(0.5)
+                                                  .setKS(0.5)
+                                                  .setShininess(30)
+                                                  .setKT(0.6)
+                                                  .setKR(0)),
+                             new Plane(new Point(-20, 10, 100),
+                                       new Point(-30, 10, 140),
+                                       new Point(15, 10, 150))
+                                 .setEmission(new Color(java.awt.Color.BLACK))
+                                 .setMaterial(new Material()
+                                                  .setKD(0.5)
+                                                  .setKS(0.5)
+                                                  .setShininess(30)
+                                                  .setKT(0)
+                                                  .setKR(0.5)),
+                             //create cube
+                             new Polygon(new Point(20, -30, 10),
+                                         new Point(40, -30, -30),
+                                         new Point(80, -30, -10),
+                                         new Point(60, -30, 30))
+                                 .setEmission(cubeColor)
+                                 .setMaterial(materialDefault),
+                             new Polygon(new Point(20, -30, 10),
+                                         new Point(40, -30, -30),
+                                         new Point(40, 10, -30),
+                                         new Point(20, 10, 10))
+                                 .setEmission(cubeColor)
+                                 .setMaterial(materialDefault),
+                             new Polygon(new Point(80, -30, -10),
+                                         new Point(40, -30, -30),
+                                         new Point(40, 10, -30),
+                                         new Point(80, 10, -10))
+                                 .setEmission(cubeColor)
+                                 .setMaterial(materialDefault),
+                             new Polygon(new Point(20, -30, 10),
+                                         new Point(60, -30, 30),
+                                         new Point(60, 10, 30),
+                                         new Point(20, 10, 10))
+                                 .setEmission(cubeColor)
+                                 .setMaterial(materialDefault),
+                             new Polygon(new Point(40, 10, -30),
+                                         new Point(80, 10, -10),
+                                         new Point(60, 10, 30),
+                                         new Point(20, 10, 10))
+                                 .setEmission(cubeColor)
+                                 .setMaterial(materialDefault),
+                             new Polygon(new Point(60, -30, 30),
+                                         new Point(80, -30, -10),
+                                         new Point(80, 10, -10),
+                                         new Point(60, 10, 30))
+                                 .setEmission(cubeColor)
+                                 .setMaterial(materialDefault));
+
+        scene.lights.add(new SpotLight(new Color(java.awt.Color.WHITE),
+                                       new Point(-100, -10, -200),
+                                       new Vector(1, -1, 3)).setKC(1).setKL(1E-5).setKQ(1.5E-7));
+        scene.lights.add(new PointLight(new Color(java.awt.Color.YELLOW), new Point(-50, -95, 0))
+                             .setKC(1)
+                             .setKL(0.00005)
+                             .setKQ(0.00005));
+//        scene.lights.add(new DirectionalLight(new Color(java.awt.Color.WHITE),
+//                                              new Vector(-1, 1, -1)));
+
+        scene.setBackground(new Color(java.awt.Color.black));
+        scene.setAmbient(new AmbientLight(Color.BLACK, new Double3(0)));
+        camera.setImageWriter(new ImageWriter("MiniProjectLevel1", 600, 600)).renderImage();
+        camera.writeToImage();
+    }
+
+
+    /**
+     * Test for mini-project, build abalone model picture.
+     */
+    @Test
+    public void testMiniProject1Abalone() {
         Scene scene = new Scene("Test scene");
 
         scene.lights.add(new SpotLight(new Color(300, 0, 0),
@@ -155,7 +258,7 @@ public class MiniProjectTests {
                              s81, s82, s83, s84, s85, s86, //
                              s91, s92, s93, s94, s95);
 
-        ImageWriter imageWriter = new ImageWriter("MiniProjectLevel1", 1000, 1000);
+        ImageWriter imageWriter = new ImageWriter("MiniProjectLevel1Abalone", 1000, 1000);
         camera.setImageWriter(imageWriter);
         camera.setRayTracer(new RayTracerBasic(scene));
         camera.renderImage();
