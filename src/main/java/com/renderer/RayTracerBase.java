@@ -3,6 +3,7 @@ package com.renderer;
 import com.primitives.Color;
 import com.primitives.Ray;
 import com.scene.Scene;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -27,5 +28,5 @@ public abstract class RayTracerBase {
      * @param ray the ray
      * @return the color of the intersect geometries
      */
-    public abstract Color traceRay(Ray ray);
+    public abstract Color traceRay(List<Ray> ray);
 }

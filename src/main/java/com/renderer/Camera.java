@@ -1,12 +1,14 @@
 package com.renderer;
 
+import static com.primitives.Util.alignZero;
+import static com.primitives.Util.isZero;
+
 import com.geometries.Intersect;
 import com.primitives.Axis;
 import com.primitives.Color;
 import com.primitives.Point;
 import com.primitives.Ray;
 import com.primitives.Vector;
-import com.primitives.Util;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.MissingResourceException;
@@ -24,6 +26,7 @@ public class Camera {
     private int distance;
     private double width;
     private double height;
+    private int lineBeamRays;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
 
@@ -38,13 +41,22 @@ public class Camera {
         this.p0 = p0;
         this.vectorTo = vectorTo.normalize();
         this.vectorUp = vectorUp.normalize();
-        if (!Util.isZero(vectorTo.dotProduct(vectorUp))) {
+        if (!isZero(vectorTo.dotProduct(vectorUp))) {
             throw new IllegalArgumentException("ERROR: vectorTo and vectorUp must be orthogonal");
         }
         this.vectorRight = vectorTo.crossProduct(vectorUp).normalize();
         distance = ERROR_VALUE_INT;
         width = ERROR_VALUE_DOUBLE;
         height = ERROR_VALUE_DOUBLE;
+        lineBeamRays = 1;
+    }
+
+    public Camera setBeamRays(int beamRays) {
+        lineBeamRays = (int)Math.sqrt(beamRays);
+        if (!isZero(lineBeamRays - Math.sqrt(beamRays))) {
+            lineBeamRays += 1;
+        }
+        return this;
     }
 
     public Point getP0() {
@@ -131,12 +143,12 @@ public class Camera {
         if (p0 == null) {
             throw new MissingResourceException(errorMessage + "p0", Point.class.getName(), key);
         }
-        if (Util.isZero(height - ERROR_VALUE_DOUBLE)) {
+        if (isZero(height - ERROR_VALUE_DOUBLE)) {
             throw new MissingResourceException(errorMessage + "height",
                                                double.class.getName(),
                                                key);
         }
-        if (Util.isZero(width - ERROR_VALUE_DOUBLE)) {
+        if (isZero(width - ERROR_VALUE_DOUBLE)) {
             throw new MissingResourceException(errorMessage + "width", double.class.getName(), key);
         }
         if (distance == ERROR_VALUE_INT) {
@@ -235,26 +247,30 @@ public class Camera {
      * Find a ray from p0 to the center of the pixel from the given resolution.
      * @param nX the number of the rows
      * @param nY the number of the columns
-     * @param j column
-     * @param i row
-     * @return ray from p0 the center to the center of the pixel in row i column j
+     * @param column column
+     * @param row row
+     * @return ray from p0 the center to the center of the pixel in row and column
      */
-    public Ray constructRay(int nX, int nY, int j, int i) {
+    public Ray constructRay(int nX, int nY, int column, int row) {
+        return constructRay(nX, nY, column, row, width, height);
+    }
+
+    public Ray constructRay(int nX, int nY, int column, int row, double width, double height) {
         Vector dir;
         Point pointCenter, pointCenterPixel;
         double ratioY, ratioX, yI, xJ;
 
         pointCenter = p0.add(vectorTo.scale(distance));
-        ratioY = Util.alignZero(height / nY);
-        ratioX = Util.alignZero(width / nX);
+        ratioY = alignZero(height / nY);
+        ratioX = alignZero(width / nX);
 
         pointCenterPixel = pointCenter;
-        yI = Util.alignZero(-1 * (i - (nY - 1) / 2d) * ratioY);
-        xJ = Util.alignZero((j - (nX - 1) / 2d) * ratioX);
-        if (!Util.isZero(xJ)) {
+        yI = alignZero(-1 * (row - (nY - 1) / 2d) * ratioY);
+        xJ = alignZero((column - (nX - 1) / 2d) * ratioX);
+        if (!isZero(xJ)) {
             pointCenterPixel = pointCenterPixel.add(vectorRight.scale(xJ));
         }
-        if (!Util.isZero(yI)) {
+        if (!isZero(yI)) {
             pointCenterPixel = pointCenterPixel.add(vectorUp.scale(yI));
         }
         dir = pointCenterPixel.subtract(p0);
@@ -281,12 +297,83 @@ public class Camera {
         return result.isEmpty() ? null : result;
     }
 
+    /**
+     * Find a ray from p0 to the center of the pixel from the given resolution.
+     * @param nX the number of the rows
+     * @param nY the number of the columns
+     * @param column column
+     * @param row row
+     * @return ray from p0 the center to the center of the pixel in row column
+     */
+    public List<Ray> constructBeamRays(int nX, int nY, int column, int row) {
+        if (lineBeamRays == 1) {
+            return List.of(constructRay(nX, nY, column, row, width, height));
+        }
+        Vector dir;
+        Point pointCenter, pointCenterPixel;
+        Ray ray;
+        double ratioY, ratioX, yI, xJ;
+        List<Ray> rays = new LinkedList<>();
+
+        pointCenter = p0.add(vectorTo.scale(distance));
+        ratioY = height / nY;
+        ratioX = width / nX;
+
+        pointCenterPixel = pointCenter;
+        yI = -1 * (row - (nY - 1) / 2d) * ratioY;
+        xJ = (column - (nX - 1) / 2d) * ratioX;
+        if (!isZero(xJ)) {
+            pointCenterPixel = pointCenterPixel.add(vectorRight.scale(xJ));
+        }
+        if (!isZero(yI)) {
+            pointCenterPixel = pointCenterPixel.add(vectorUp.scale(yI));
+        }
+
+        for (int internalRow = 0; internalRow < lineBeamRays; internalRow++) {
+            for (int internalColumn = 0; internalColumn < lineBeamRays; internalColumn++) {
+                double rY = ratioY / lineBeamRays;
+                double rX = ratioX / lineBeamRays;
+                double ySampleI = -1 * (internalRow - (rY - 1) / 2d) * rY;
+                double xSampleJ = (internalColumn - (rX - 1) / 2d) * rX;
+                Point pIJ = pointCenterPixel;
+                if (!isZero(xSampleJ)) {
+                    pIJ = pIJ.add(vectorRight.scale(xSampleJ));
+                }
+                if (!isZero(ySampleI)) {
+                    pIJ = pIJ.add(vectorUp.scale(-ySampleI));
+                }
+                ray = new Ray(p0, pIJ.subtract(p0));
+
+                rays.add(ray);
+            }
+        }
+        /*
+                double rY = internalHeight / internalCountHeight;
+                double rX = internalWidth / internalCountWidth;
+                double ySampleI = (internalRow * rY + rY / 2d) + yi;
+                double xSampleJ = (internalColumn * rX + rX / 2d) + xj;
+                Point pIJ = pC;
+                if (!isZero(xSampleJ)) {
+                    pIJ = pIJ.add(vectorRight.scale(xSampleJ));
+                }
+                if (!isZero(ySampleI)) {
+                    pIJ = pIJ.add(vectorUp.scale(-ySampleI));
+                }
+                rays.add(new Ray(p0, pIJ.subtract(pC)));
+         */
+
+        return rays;
+    }
+
     public Camera renderImage() throws MissingResourceException {
         checkAndThrowIfMissingResources();
         IntStream.range(0, imageWriter.getNx()).parallel().forEach(row -> {
             IntStream.range(0, imageWriter.getNy()).parallel().forEach(column -> {
-                Ray ray = constructRay(imageWriter.getNx(), imageWriter.getNy(), row, column);
-                Color color = rayTracer.traceRay(ray);
+                List<Ray> rays = constructBeamRays(imageWriter.getNx(),
+                                                   imageWriter.getNy(),
+                                                   row,
+                                                   column);
+                Color color = rayTracer.traceRay(rays);
                 imageWriter.writePixel(row, column, color);
             });
         });
