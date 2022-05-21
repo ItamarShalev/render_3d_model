@@ -21,6 +21,8 @@ import org.junit.jupiter.api.Test;
 
 public class MiniProjectTests {
 
+    static final int DEFAULT_BEAM_RAYS = 81;
+
     /**
      * Test for mini-project, build abalone model picture.
      */
@@ -114,12 +116,14 @@ public class MiniProjectTests {
                              .setKC(1)
                              .setKL(0.00005)
                              .setKQ(0.00005));
-//        scene.lights.add(new DirectionalLight(new Color(java.awt.Color.WHITE),
-//                                              new Vector(-1, 1, -1)));
+        scene.lights.add(new DirectionalLight(new Color(java.awt.Color.WHITE),
+                                              new Vector(-1, 1, -1)));
 
         scene.setBackground(new Color(java.awt.Color.black));
         scene.setAmbient(new AmbientLight(Color.BLACK, new Double3(0)));
-        camera.setImageWriter(new ImageWriter("MiniProjectLevel1", 600, 600)).renderImage();
+        camera.setImageWriter(new ImageWriter("MiniProjectLevel1", 600, 600));
+        camera.setBeamRays(DEFAULT_BEAM_RAYS);
+        camera.renderImage();
         camera.writeToImage();
     }
 
@@ -261,6 +265,7 @@ public class MiniProjectTests {
         ImageWriter imageWriter = new ImageWriter("MiniProjectLevel1Abalone", 1000, 1000);
         camera.setImageWriter(imageWriter);
         camera.setRayTracer(new RayTracerBasic(scene));
+        camera.setBeamRays(DEFAULT_BEAM_RAYS);
         camera.renderImage();
         camera.writeToImage();
     }
