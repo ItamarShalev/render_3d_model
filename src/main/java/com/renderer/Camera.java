@@ -309,10 +309,8 @@ public class Camera {
         if (lineBeamRays == 1) {
             return List.of(constructRay(nX, nY, column, row, width, height));
         }
-        Vector dir;
         Point pointCenter, pointCenterPixel;
-        Ray ray;
-        double ratioY, ratioX, yI, xJ;
+        double ratioY, ratioX, yI, xJ, ySampleI, xSampleJ;
         List<Ray> rays = new LinkedList<>();
 
         pointCenter = p0.add(vectorTo.scale(distance));
@@ -328,40 +326,25 @@ public class Camera {
         if (!isZero(yI)) {
             pointCenterPixel = pointCenterPixel.add(vectorUp.scale(yI));
         }
+        ratioY = ratioY / lineBeamRays;
+        ratioX = ratioX / lineBeamRays;
 
         for (int internalRow = 0; internalRow < lineBeamRays; internalRow++) {
-            for (int internalColumn = 0; internalColumn < lineBeamRays; internalColumn++) {
-                double rY = ratioY / lineBeamRays;
-                double rX = ratioX / lineBeamRays;
-                double ySampleI = -1 * (internalRow - (rY - 1) / 2d) * rY;
-                double xSampleJ = (internalColumn - (rX - 1) / 2d) * rX;
-                Point pIJ = pointCenterPixel;
-                if (!isZero(xSampleJ)) {
-                    pIJ = pIJ.add(vectorRight.scale(xSampleJ));
-                }
-                if (!isZero(ySampleI)) {
-                    pIJ = pIJ.add(vectorUp.scale(-ySampleI));
-                }
-                ray = new Ray(p0, pIJ.subtract(p0));
+            ySampleI = -1 * (internalRow - (ratioY - 1) / 2d) * ratioY;
+            Point pIJ = pointCenterPixel;
+            if (!isZero(ySampleI)) {
+                pIJ = pIJ.add(vectorUp.scale(-ySampleI));
+            }
 
-                rays.add(ray);
+            for (int internalColumn = 0; internalColumn < lineBeamRays; internalColumn++) {
+                pointCenter = pIJ;
+                xSampleJ = (internalColumn - (ratioX - 1) / 2d) * ratioX;
+                if (!isZero(xSampleJ)) {
+                    pointCenter = pointCenter.add(vectorRight.scale(xSampleJ));
+                }
+                rays.add(new Ray(p0, pointCenter.subtract(p0)));
             }
         }
-        /*
-                double rY = internalHeight / internalCountHeight;
-                double rX = internalWidth / internalCountWidth;
-                double ySampleI = (internalRow * rY + rY / 2d) + yi;
-                double xSampleJ = (internalColumn * rX + rX / 2d) + xj;
-                Point pIJ = pC;
-                if (!isZero(xSampleJ)) {
-                    pIJ = pIJ.add(vectorRight.scale(xSampleJ));
-                }
-                if (!isZero(ySampleI)) {
-                    pIJ = pIJ.add(vectorUp.scale(-ySampleI));
-                }
-                rays.add(new Ray(p0, pIJ.subtract(pC)));
-         */
-
         return rays;
     }
 
