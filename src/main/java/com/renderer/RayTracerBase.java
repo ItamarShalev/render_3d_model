@@ -29,4 +29,6 @@ public abstract class RayTracerBase {
      * @return the color of the intersect geometries
      */
     public abstract Color traceRay(List<Ray> ray);
+
+    public abstract Color traceRay(Ray ray);
 }

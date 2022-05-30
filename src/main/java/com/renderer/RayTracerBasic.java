@@ -11,7 +11,6 @@ import com.primitives.Point;
 import com.primitives.Ray;
 import com.primitives.Vector;
 import com.scene.Scene;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -81,23 +80,25 @@ public class RayTracerBasic extends RayTracerBase {
 
     @Override
     public Color traceRay(List<Ray> rays) {
-        List<Color> colors = new LinkedList<>();
+        List<Color> colors = rays.stream().map(this::traceRay).toList();
+        return Color.average(colors);
+    }
+
+    @Override
+    public Color traceRay(Ray ray) {
         Color color;
         List<GeoPoint> intersectPoints;
         GeoPoint closestPoint;
 
-        for (Ray ray : rays) {
-            intersectPoints = scene.geometries.findGeoIntersections(ray);
-            if (intersectPoints == null) {
-                color = scene.background;
-            } else {
-                closestPoint = ray.findClosestGeoPoint(intersectPoints);
-                color = calcColor(closestPoint, ray);
-            }
-            colors.add(color);
+        intersectPoints = scene.geometries.findGeoIntersections(ray);
+        if (intersectPoints == null) {
+            color = scene.background;
+        } else {
+            closestPoint = ray.findClosestGeoPoint(intersectPoints);
+            color = calcColor(closestPoint, ray);
         }
 
-        return Color.average(colors);
+        return color;
     }
 
     /**
