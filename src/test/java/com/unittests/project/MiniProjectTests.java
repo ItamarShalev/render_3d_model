@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 public class MiniProjectTests {
 
-    static final int DEFAULT_BEAM_RAYS = 81;
+    static final int DEFAULT_BEAM_RAYS = 16;
 
     /**
      * Test for mini-project, build abalone model picture.
@@ -119,10 +119,11 @@ public class MiniProjectTests {
         scene.lights.add(new DirectionalLight(new Color(java.awt.Color.WHITE),
                                               new Vector(-1, 1, -1)));
 
-        scene.setBackground(new Color(java.awt.Color.black));
+        scene.setBackground(Color.BLACK);
         scene.setAmbient(new AmbientLight(Color.BLACK, new Double3(0)));
-        camera.setImageWriter(new ImageWriter("MiniProjectLevel1", 600, 600));
-        camera.setBeamRays(DEFAULT_BEAM_RAYS);
+        camera.setImageWriter(new ImageWriter("MiniProjectLevel1", 1000, 1000));
+        camera.setBeamRays(DEFAULT_BEAM_RAYS, DEFAULT_BEAM_RAYS);
+        camera.setRayTracer(new RayTracerBasic(scene).setAdaptiveGrid(true).setMaxLevel(3));
         camera.renderImage();
         camera.writeToImage();
     }
@@ -264,8 +265,8 @@ public class MiniProjectTests {
 
         ImageWriter imageWriter = new ImageWriter("MiniProjectLevel1Abalone", 1000, 1000);
         camera.setImageWriter(imageWriter);
-        camera.setRayTracer(new RayTracerBasic(scene));
-        camera.setBeamRays(DEFAULT_BEAM_RAYS);
+        camera.setBeamRays(DEFAULT_BEAM_RAYS, DEFAULT_BEAM_RAYS);
+        camera.setRayTracer(new RayTracerBasic(scene).setAdaptiveGrid(true).setMaxLevel(3));
         camera.renderImage();
         camera.writeToImage();
     }

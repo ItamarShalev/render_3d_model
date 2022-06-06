@@ -1,7 +1,7 @@
 package com.primitives;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Wrapper class for java.jwt.Color The constructors operate with any
@@ -16,6 +16,7 @@ public class Color {
     public static final Color YELLOW = new Color(255, 255, 0);
     public static final Color RED = new Color(255, 0, 0);
     public static final Color BLUE = new Color(0, 0, 255);
+    public static final double EPSILON = 0.1;
     /* The internal fields tx`o maintain RGB components as double numbers from 0 to whatever... */
     private final Double3 rgb;
 
@@ -63,14 +64,20 @@ public class Color {
         rgb = new Double3(other.getRed(), other.getGreen(), other.getBlue());
     }
 
-    public static Color average(List<Color> colors) {
+    public static Color average(List<Color> colors, int total) {
         Double3 averageValues;
         Double3 sum = Double3.ZERO;
         for (Color c : colors) {
             sum = sum.add(c.rgb);
         }
-        averageValues = sum.reduce(colors.size());
+        averageValues = sum.reduce(total);
         return new Color(averageValues.d1, averageValues.d2, averageValues.d3);
+    }
+
+    public static boolean allEquals(List<Color> colors) {
+        return IntStream
+            .range(1, colors.size())
+            .allMatch(index -> colors.get(0).equals(colors.get(index)));
     }
 
     /**
@@ -154,26 +161,26 @@ public class Color {
         return new Color(rgb.d1 / k.d1, rgb.d2 / k.d2, rgb.d3 / k.d3);
     }
 
-    public boolean equals(Object... objects) {
-        return Arrays.stream(objects).allMatch(this::equals);
-    }
-
     @Override
     public int hashCode() {
         return rgb != null ? rgb.hashCode() : 0;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object other) {
+        if (this == other) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (other == null || getClass() != other.getClass()) {
             return false;
         }
 
-        Color color = (Color)o;
+        Color color = (Color)other;
+        return isSame(rgb.d1, color.rgb.d1) && isSame(rgb.d2, color.rgb.d2) &&
+               isSame(rgb.d3, color.rgb.d3);
+    }
 
-        return rgb != null ? rgb.equals(color.rgb) : color.rgb == null;
+    private boolean isSame(double x, double y) {
+        return Math.abs(x - y) <= EPSILON;
     }
 }

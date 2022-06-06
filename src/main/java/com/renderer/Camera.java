@@ -18,7 +18,6 @@ import java.util.stream.IntStream;
 public class Camera {
     private static final double ERROR_VALUE_DOUBLE = -1d;
     private static final int ERROR_VALUE_INT = -1;
-    private static final int MAX_THREADS = 16;
     private Vector vectorTo;
     private Vector vectorUp;
     private Vector vectorRight;
@@ -26,9 +25,11 @@ public class Camera {
     private int distance;
     private double width;
     private double height;
-    private int lineBeamRays;
     private ImageWriter imageWriter;
     private RayTracerBase rayTracer;
+    private int rowBeamRays;
+    private int columnBeamRays;
+    private boolean isAdaptiveGrid;
 
     /**
      * Constructor to create new Camera.
@@ -48,14 +49,17 @@ public class Camera {
         distance = ERROR_VALUE_INT;
         width = ERROR_VALUE_DOUBLE;
         height = ERROR_VALUE_DOUBLE;
-        lineBeamRays = 1;
+        rowBeamRays = 1;
+        columnBeamRays = 1;
     }
 
-    public Camera setBeamRays(int beamRays) {
-        lineBeamRays = (int)Math.sqrt(beamRays);
-        if (!isZero(lineBeamRays - Math.sqrt(beamRays))) {
-            lineBeamRays += 1;
+    public Camera setBeamRays(int rowBeamRays, int columnBeamRays) {
+        if (rowBeamRays < 1 || columnBeamRays < 1) {
+            throw new IllegalArgumentException(
+                "rowBeamRays and columnBeamRays params must be bigger than zero !");
         }
+        this.rowBeamRays = rowBeamRays;
+        this.columnBeamRays = columnBeamRays;
         return this;
     }
 
@@ -255,6 +259,16 @@ public class Camera {
         return constructRay(nX, nY, column, row, width, height);
     }
 
+    /**
+     * Find a ray from p0 to the center of the pixel from the given resolution.
+     * @param nX the number of the rows
+     * @param nY the number of the columns
+     * @param column column
+     * @param row row
+     * @param width the width of the view plane
+     * @param height the height of the view plane
+     * @return ray from p0 the center to the center of the pixel in row and column
+     */
     public Ray constructRay(int nX, int nY, int column, int row, double width, double height) {
         Vector dir;
         Point pointCenter, pointCenterPixel;
@@ -306,7 +320,7 @@ public class Camera {
      * @return ray from p0 the center to the center of the pixel in row column
      */
     public List<Ray> constructBeamRays(int nX, int nY, int column, int row) {
-        if (lineBeamRays == 1) {
+        if (rowBeamRays == 1 && columnBeamRays == 1) {
             return List.of(constructRay(nX, nY, column, row, width, height));
         }
         Point pointCenter, pointCenterPixel;
@@ -326,17 +340,17 @@ public class Camera {
         if (!isZero(yI)) {
             pointCenterPixel = pointCenterPixel.add(vectorUp.scale(yI));
         }
-        ratioY = ratioY / lineBeamRays;
-        ratioX = ratioX / lineBeamRays;
+        ratioY = ratioY / columnBeamRays;
+        ratioX = ratioX / rowBeamRays;
 
-        for (int internalRow = 0; internalRow < lineBeamRays; internalRow++) {
+        for (int internalRow = 0; internalRow < rowBeamRays; internalRow++) {
             ySampleI = -1 * (internalRow - (ratioY - 1) / 2d) * ratioY;
             Point pIJ = pointCenterPixel;
             if (!isZero(ySampleI)) {
                 pIJ = pIJ.add(vectorUp.scale(-ySampleI));
             }
 
-            for (int internalColumn = 0; internalColumn < lineBeamRays; internalColumn++) {
+            for (int internalColumn = 0; internalColumn < columnBeamRays; internalColumn++) {
                 pointCenter = pIJ;
                 xSampleJ = (internalColumn - (ratioX - 1) / 2d) * ratioX;
                 if (!isZero(xSampleJ)) {
@@ -348,6 +362,11 @@ public class Camera {
         return rays;
     }
 
+    /**
+     * Find a ray from p0 to the center of the pixel from the given resolution.
+     * @return ray from p0 the center to the center of the pixel in row and column
+     * @throws MissingResourceException if the camera is not initialized
+     */
     public Camera renderImage() throws MissingResourceException {
         checkAndThrowIfMissingResources();
         IntStream.range(0, imageWriter.getNx()).parallel().forEach(row -> {

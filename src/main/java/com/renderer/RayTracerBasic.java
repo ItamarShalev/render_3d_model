@@ -7,11 +7,19 @@ import com.lighting.LightSource;
 import com.primitives.Color;
 import com.primitives.Double3;
 import com.primitives.Material;
+import com.primitives.Pair;
 import com.primitives.Point;
 import com.primitives.Ray;
 import com.primitives.Vector;
+import com.primitives.Wrapper;
 import com.scene.Scene;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+import java.util.stream.Collectors;
 
 /**
  * Implement RayTracerBase to handle all the ray trace.
@@ -21,6 +29,8 @@ public class RayTracerBasic extends RayTracerBase {
     private static final double DELTA = 0.1;
     private static final double MIN_CALC_COLOR_K = 0.001;
     private static final int MAX_CALC_COLOR_LEVEL = 10;
+    private boolean isAdaptiveGrid;
+    private int maxLevel;
 
     /**
      * Constructor.
@@ -29,6 +39,8 @@ public class RayTracerBasic extends RayTracerBase {
      */
     public RayTracerBasic(Scene scene) throws NullPointerException {
         super(scene);
+        this.isAdaptiveGrid = false;
+        this.maxLevel = 1;
     }
 
     /**
@@ -64,6 +76,15 @@ public class RayTracerBasic extends RayTracerBase {
         return color;
     }
 
+    /**
+     * Calculate the diffusive color.
+     * @param material the material
+     * @param dirLight the light direction
+     * @param normal the normal
+     * @param dir the ray direction
+     * @param lightIntensity the light intensity
+     * @return the diffusive color
+     */
     private Color calcSpecular(Material material, Vector dirLight, Vector normal, Vector dir,
                                Color lightIntensity) {
         Vector reflectedDir = dirLight.add(normal.scale(-2 * dirLight.dotProduct(normal)));
@@ -72,6 +93,14 @@ public class RayTracerBasic extends RayTracerBase {
                      : Color.BLACK;
     }
 
+    /**
+     * Calculate the diffusive effects of the point.
+     * @param material the material of the point
+     * @param dirLight the light direction
+     * @param normal the normal of the point
+     * @param lightIntensity the light intensity
+     * @return the diffusive effects of the point
+     */
     private Color calcDiffusive(Material material, Vector dirLight, Vector normal,
                                 Color lightIntensity) {
         double s = Math.abs(alignZero(dirLight.dotProduct(normal)));
@@ -80,8 +109,17 @@ public class RayTracerBasic extends RayTracerBase {
 
     @Override
     public Color traceRay(List<Ray> rays) {
-        List<Color> colors = rays.stream().map(this::traceRay).toList();
-        return Color.average(colors);
+        Color result;
+        if (isAdaptiveGrid && rays.size() > 4) {
+            Wrapper<Color> colorWrapper = new Wrapper<>(Color.BLACK);
+            Map<Ray, Color> map = new HashMap<>();
+            traceRayCube(colorWrapper, rays, map);
+            result = colorWrapper.variable.reduce(rays.size());
+        } else {
+            List<Color> colors = rays.stream().map(this::traceRay).collect(Collectors.toList());
+            result = Color.average(colors, colors.size());
+        }
+        return result;
     }
 
     @Override
@@ -99,6 +137,67 @@ public class RayTracerBasic extends RayTracerBase {
         }
 
         return color;
+    }
+
+    /**
+     * Calculate the color of the point.
+     * @param colorWrapper the color wrapper for hold the color
+     * @param allRays the rays to calculate the color
+     * @param map the map to hold the color and avoid calculate for the same ray
+     */
+    public void traceRayCube(Wrapper<Color> colorWrapper, List<Ray> allRays, Map<Ray, Color> map) {
+        Color color = null;
+        List<Ray> rays;
+        int n, level;
+        Pair<List<Ray>, Integer> pair;
+        Stack<Pair<List<Ray>, Integer>> stack = new Stack<>();
+        stack.add(new Pair<>(allRays, maxLevel));
+
+        while (!stack.isEmpty()) {
+            pair = stack.pop();
+            rays = pair.first;
+            level = pair.second;
+
+            if (level <= 1) {
+                for (Ray ray : rays) {
+                    colorWrapper.variable = colorWrapper.variable.add(traceRay(ray));
+                }
+                continue;
+            }
+
+            n = (int)Math.sqrt(rays.size());
+            /* Indexes of: topLeft, topRight, bottomLeft, bottomRight */
+            int[] indexes = {0, (n - 1), (n * (n - 1)), (n * n - 1)};
+
+            List<Color> cubeColors = new ArrayList<>(4);
+
+            for (int index : indexes) {
+                Ray ray = rays.get(index);
+                if (map.containsKey(ray)) {
+                    color = map.get(ray);
+                } else {
+                    color = traceRay(ray);
+                    map.put(ray, color);
+                }
+                cubeColors.add(color);
+            }
+
+            if (rays.size() <= 4 || Color.allEquals(cubeColors)) {
+                colorWrapper.variable = colorWrapper.variable.add(color.scale(n * n));
+            } else {
+                for (int row = 0; row < n; row += n / 2) {
+                    for (int column = 0; column < n; column += n / 2) {
+                        List<Ray> rayList = new LinkedList<>();
+                        for (int i = row; i < row + n / 2; i++) {
+                            for (int j = column; j < column + n / 2; j++) {
+                                rayList.add(rays.get(i * n + j));
+                            }
+                        }
+                        stack.push(new Pair<>(rayList, level - 1));
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -233,5 +332,15 @@ public class RayTracerBasic extends RayTracerBase {
         List<GeoPoint> intersections = scene.geometries.findGeoIntersections(ray);
         boolean isNullOrEmpty = intersections == null || intersections.isEmpty();
         return isNullOrEmpty ? null : ray.findClosestGeoPoint(intersections);
+    }
+
+    public RayTracerBasic setAdaptiveGrid(boolean isAdaptiveGrid) {
+        this.isAdaptiveGrid = isAdaptiveGrid;
+        return this;
+    }
+
+    public RayTracerBasic setMaxLevel(int maxLevel) {
+        this.maxLevel = maxLevel;
+        return this;
     }
 }
